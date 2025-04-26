@@ -2,7 +2,7 @@
 <package format="2">
   <name>xmobot</name>
   <version>0.0.0</version>
-  <description>The xmobot package</description>
+  <description>Xmobot is a flexible and modular mobile robot platform designed for SLAM, path planning, and end-to-end navigation benchmarking across diverse drive types, including differential, Ackermann, Mecanum (omnidirectional drives), and four-wheel independent steering with independent driving.</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
