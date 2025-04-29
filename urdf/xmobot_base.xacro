@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- 引用模块 -->
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_drive.xacro"/>
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_sensors.xacro"/>
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_inertial.xacro"/>
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_gazebo.xacro"/>
+
+    <!-- Basement -->
+    <link name="base_footprint"/>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 ${robot_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <xacro:if value="${use_mesh}">
+                <geometry>
+                    <mesh filename="package://xmobot/meshes/base.dae" scale="1 1 1"/>
+                </geometry>
+            </xacro:if>
+            <xacro:unless value="${use_mesh}">
+                <geometry>
+                    <box size="${robot_length} ${robot_width} ${robot_height}"/>
+                </geometry>
+            </xacro:unless>
+            <material name="Grey">
+                <color rgba="0.5 0.5 0.5 1.0"/>
+            </material>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="${robot_length} ${robot_width} ${robot_height}"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="30" size_x="${robot_length}" size_y="${robot_width}" size_z="${robot_height}"/>
+    </link>
+
+    <!-- 底盘结构 -->
+    <xacro:drive_system/>
+
+    <!-- 传感器挂载 -->
+    <xacro:sensors/>
+
+    <!-- gazebo控制接口 -->
+    <xacro:gazebo_plugins/>
+
+</robot>

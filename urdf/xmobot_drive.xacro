@@ -1,58 +1,136 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <xacro:property name="drive_type" value="diff_drive"/>
-    <!-- diff_drive / ackermann / 4wis -->
-
-    <!-- Wheel distance parameters -->
-    <xacro:property name="wheel_separation_x" value="0.5"/>
-    <xacro:property name="wheel_separation_y" value="0.4"/>
-
-    <!-- Import wheel macro -->
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_wheel.xacro"/>
-
     <xacro:macro name="drive_system">
 
+        <!-- 定义四个轮子的生成方式 -->
+        <xacro:macro name="wheel_unit" params="prefix x y enable_steer">
+
+            <!-- 如果需要加转向 -->
+            <xacro:if value="${enable_steer}">
+                <link name="${prefix}_steering_link">
+                    <visual>
+                        <origin xyz="0 0 0" rpy="0 0 0"/>
+                        <xacro:if value="${use_mesh}">
+                            <geometry>
+                                <mesh filename="package://xmobot/meshes/steering_link.dae" scale="1 1 1"/>
+                            </geometry>
+                        </xacro:if>
+                        <xacro:unless value="${use_mesh}">
+                            <geometry>
+                                <cylinder radius="0.05" length="0.03"/>
+                            </geometry>
+                        </xacro:unless>
+                        <material name="Gray">
+                            <color rgba="0.5 0.5 0.5 1.0"/>
+                        </material>
+                    </visual>
+                    <collision>
+                        <origin xyz="0 0 0" rpy="0 0 0"/>
+                        <geometry>
+                            <cylinder radius="0.05" length="0.03"/>
+                        </geometry>
+                    </collision>
+
+                    <xacro:inertial_cylinder mass="10" radius="0.05" length="0.03"/>
+                </link>
+                <joint name="${prefix}_steering_joint" type="revolute">
+                    <parent link="base_link"/>
+                    <child link="${prefix}_steering_link"/>
+                    <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
+                    <axis xyz="0 0 1"/>
+                    <limit lower="${-90*DEG_TO_RAD}" upper="${90*DEG_TO_RAD}" effort="1.0" velocity="1.0"/>
+                </joint>
+            </xacro:if>
+
+            <!-- 轮子link -->
+            <link name="${prefix}_wheel_link">
+                <visual>
+                    <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
+                    <xacro:if value="${use_mesh}">
+                        <geometry>
+                            <mesh filename="package://xmobot/meshes/wheel.dae" scale="1 1 1"/>
+                        </geometry>
+                    </xacro:if>
+                    <xacro:unless value="${use_mesh}">
+                        <geometry>
+                            <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+                        </geometry>
+                    </xacro:unless>
+                    <material name="Black">
+                        <color rgba="0.1 0.1 0.1 1.0"/>
+                    </material>
+                </visual>
+
+                <collision>
+                    <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
+                    <geometry>
+                        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+                    </geometry>
+                </collision>
+
+                <inertial>
+                    <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>  <!-- 注意这里也旋转M_PI_2 -->
+                    <mass value="5.0"/>
+                    <inertia
+                            ixx="1.0" iyy="1.0" izz="1.0"
+                            ixy="0.0" ixz="0.0" iyz="0.0"/>
+                </inertial>
+            </link>
+
+            <!-- wheel joint -->
+            <xacro:if value="${enable_steer}">
+                <joint name="${prefix}_wheel_joint" type="continuous">
+                    <parent link="${prefix}_steering_link"/>
+                    <child link="${prefix}_wheel_link"/>
+                    <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 0"/>
+                    <axis xyz="0 1 0"/>
+                </joint>
+            </xacro:if>
+
+            <xacro:unless value="${enable_steer}">
+                <joint name="${prefix}_wheel_joint" type="continuous">
+                    <parent link="base_link"/>
+                    <child link="${prefix}_wheel_link"/>
+                    <origin xyz="${x} ${y} ${-wheel_radius}" rpy="0 0 0"/>
+                    <axis xyz="0 1 0"/>
+                </joint>
+            </xacro:unless>
+
+        </xacro:macro>
+
+        <!-- 根据drive_type生成四个轮子 -->
+
         <xacro:if value="${drive_type == 'diff_drive' or drive_type == 'mecanum'}">
-            <!-- Four wheels directly attached to base_link -->
-
-            <xacro:wheel prefix="front_left"  mesh_file="package://xmobot/meshes/wheel.dae"/>
-            <joint name="front_left_wheel_joint" type="continuous">
-                <parent link="base_link"/>
-                <child link="front_left_wheel_link"/>
-                <origin xyz="${wheel_separation_x/2} ${wheel_separation_y/2} 0" rpy="0 0 0"/>
-                <axis xyz="0 1 0"/>
-            </joint>
-
-            <xacro:wheel prefix="front_right" mesh_file="package://xmobot/meshes/wheel.dae"/>
-            <joint name="front_right_wheel_joint" type="continuous">
-                <parent link="base_link"/>
-                <child link="front_right_wheel_link"/>
-                <origin xyz="${wheel_separation_x/2} ${-wheel_separation_y/2} 0" rpy="0 0 0"/>
-                <axis xyz="0 1 0"/>
-            </joint>
-
-            <xacro:wheel prefix="rear_left" mesh_file="package://xmobot/meshes/wheel.dae"/>
-            <joint name="rear_left_wheel_joint" type="continuous">
-                <parent link="base_link"/>
-                <child link="rear_left_wheel_link"/>
-                <origin xyz="${-wheel_separation_x/2} ${wheel_separation_y/2} 0" rpy="0 0 0"/>
-                <axis xyz="0 1 0"/>
-            </joint>
-
-            <xacro:wheel prefix="rear_right" mesh_file="package://xmobot/meshes/wheel.dae"/>
-            <joint name="rear_right_wheel_joint" type="continuous">
-                <parent link="base_link"/>
-                <child link="rear_right_wheel_link"/>
-                <origin xyz="${-wheel_separation_x/2} ${-wheel_separation_y/2} 0" rpy="0 0 0"/>
-                <axis xyz="0 1 0"/>
-            </joint>
-
+            <!-- 差速 / 麦克纳姆模式，四轮固定，不转向 -->
+            <xacro:wheel_unit prefix="front_left"  x="${wheel_separation_x/2}"  y="${wheel_separation_y/2}"  enable_steer="false"/>
+            <xacro:wheel_unit prefix="front_right" x="${wheel_separation_x/2}"  y="${-wheel_separation_y/2}" enable_steer="false"/>
+            <xacro:wheel_unit prefix="rear_left"   x="${-wheel_separation_x/2}" y="${wheel_separation_y/2}"  enable_steer="false"/>
+            <xacro:wheel_unit prefix="rear_right"  x="${-wheel_separation_x/2}" y="${-wheel_separation_y/2}" enable_steer="false"/>
         </xacro:if>
 
-        <xacro:if value="${drive_type == 'ackermann' or drive_type == '4wis'}">
-            <!-- 这里后续增加转向关节，双层嵌套 -->
-            <!-- （我们下一步细化四轮转向版本！） -->
+        <xacro:if value="${drive_type == 'ackermann_front'}">
+            <!-- 前轮转向阿克曼模式 -->
+            <xacro:wheel_unit prefix="front_left"  x="${wheel_separation_x/2}"  y="${wheel_separation_y/2}"  enable_steer="true"/>
+            <xacro:wheel_unit prefix="front_right" x="${wheel_separation_x/2}"  y="${-wheel_separation_y/2}" enable_steer="true"/>
+            <xacro:wheel_unit prefix="rear_left"   x="${-wheel_separation_x/2}" y="${wheel_separation_y/2}"  enable_steer="false"/>
+            <xacro:wheel_unit prefix="rear_right"  x="${-wheel_separation_x/2}" y="${-wheel_separation_y/2}" enable_steer="false"/>
+        </xacro:if>
+
+        <xacro:if value="${drive_type == 'ackermann_rear'}">
+            <!-- 后轮转向阿克曼模式 -->
+            <xacro:wheel_unit prefix="front_left"  x="${wheel_separation_x/2}"  y="${wheel_separation_y/2}"  enable_steer="false"/>
+            <xacro:wheel_unit prefix="front_right" x="${wheel_separation_x/2}"  y="${-wheel_separation_y/2}" enable_steer="false"/>
+            <xacro:wheel_unit prefix="rear_left"   x="${-wheel_separation_x/2}" y="${wheel_separation_y/2}"  enable_steer="true"/>
+            <xacro:wheel_unit prefix="rear_right"  x="${-wheel_separation_x/2}" y="${-wheel_separation_y/2}" enable_steer="true"/>
+        </xacro:if>
+
+        <xacro:if value="${drive_type == '4wis'}">
+            <!-- 四轮独立转向 -->
+            <xacro:wheel_unit prefix="front_left"  x="${wheel_separation_x/2}"  y="${wheel_separation_y/2}"  enable_steer="true"/>
+            <xacro:wheel_unit prefix="front_right" x="${wheel_separation_x/2}"  y="${-wheel_separation_y/2}" enable_steer="true"/>
+            <xacro:wheel_unit prefix="rear_left"   x="${-wheel_separation_x/2}" y="${wheel_separation_y/2}"  enable_steer="true"/>
+            <xacro:wheel_unit prefix="rear_right"  x="${-wheel_separation_x/2}" y="${-wheel_separation_y/2}" enable_steer="true"/>
         </xacro:if>
 
     </xacro:macro>

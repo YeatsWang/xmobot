@@ -1,24 +1,57 @@
 <launch>
 
+    <arg name="use_sim_time" default="true"/>
+    <arg name="drive_type" default="4wis"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
+    <arg name="world" default="$(find gazebo_ros)/worlds/empty.world"/>
+
     <!-- 加载robot_description -->
-    <param name="robot_description" command="$(find xacro)/xacro $(find xmobot)/urdf/xmobot.urdf.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find xmobot)/urdf/xmobot.urdf.xacro' use_mesh:=false drive_type:=$(arg drive_type)"/>
+
+    <!-- 启动controller manager (从gazebo_controller.yaml加载控制器) -->
+    <rosparam file="$(find xmobot)/config/controller_gazebo.yaml" command="load"/>
 
     <!-- 启动Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="paused" value="false"/>
-        <arg name="use_sim_time" value="true"/>
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="paused" value="true"/>
         <arg name="gui" value="true"/>
         <arg name="headless" value="false"/>
         <arg name="debug" value="false"/>
     </include>
 
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"  respawn="false" output="screen"
+          args="-param robot_description -urdf -model xmobot -x 0.0 -y 0.0 -z 0.1"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="joint_state_controller velocity_controller" />
+
+    <!-- 动态根据drive_type判断启动哪些steering controller -->
+    <group if="$(eval drive_type == 'diff_drive')">
+        <node name="controller_spawner_front" pkg="controller_manager" type="spawner" respawn="false"
+              args="diff_drive_controller"/>
+    </group>
+
+    <group if="$(eval drive_type == 'ackermann_front')">
+        <node name="controller_spawner_front" pkg="controller_manager" type="spawner" respawn="false"
+              args="front_left_steering_controller front_right_steering_controller"/>
+    </group>
+
+    <group if="$(eval drive_type == 'ackermann_rear')">
+        <node name="controller_spawner_rear" pkg="controller_manager" type="spawner" respawn="false"
+              args="rear_left_steering_controller rear_right_steering_controller"/>
+    </group>
+
+    <group if="$(eval drive_type == '4wis')">
+        <node name="controller_spawner_all" pkg="controller_manager" type="spawner" respawn="false"
+              args="front_left_steering_controller front_right_steering_controller rear_left_steering_controller rear_right_steering_controller"/>
+    </group>
+
     <!-- 发布joint_states -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
 
-    <!-- 启动controller manager (从controllers.yaml加载控制器) -->
-<!--    <rosparam file="$(find xmobot)/config/controllers.yaml" command="load"/>-->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" respawn="true" output="screen"/>
 
-<!--    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"-->
-<!--          args="joint_state_controller diff_drive_controller" />-->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find xmobot)/rviz/xmobot_display.rviz"/>
 
 </launch>

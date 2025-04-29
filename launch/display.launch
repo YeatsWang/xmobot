@@ -1,0 +1,38 @@
+<launch>
+    <!-- 声明arg -->
+    <arg name="robot_length" default="0.5"/>
+    <arg name="robot_width" default="0.4"/>
+    <arg name="robot_height" default="0.1"/>
+    <arg name="wheel_radius" default="0.08"/>
+    <arg name="wheel_width" default="0.05"/>
+    <arg name="wheel_separation_x" default="0.5"/>
+    <arg name="wheel_separation_y" default="0.4"/>
+    <arg name="drive_type" default="diff_drive"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
+    <arg name="use_mesh" default="false"/>
+
+    <!-- 将arg传给xacro -->
+    <param name="robot_description" command="
+    $(find xacro)/xacro $(find xmobot)/urdf/xmobot.urdf.xacro
+    robot_length:=$(arg robot_length)
+    robot_width:=$(arg robot_width)
+    robot_height:=$(arg robot_height)
+    wheel_radius:=$(arg wheel_radius)
+    wheel_width:=$(arg wheel_width)
+    wheel_separation_x:=$(arg wheel_separation_x)
+    wheel_separation_y:=$(arg wheel_separation_y)
+    drive_type:=$(arg drive_type)
+    use_mesh:=$(arg use_mesh)"/>
+<!--    <param name="robot_description" command="-->
+<!--    $(find xacro)/xacro $(find xmobot)/urdf/xmobot.urdf.xacro-->
+<!--    drive_type:=$(arg drive_type)-->
+<!--    use_mesh:=$(arg use_mesh)"/>-->
+
+    <!-- Joint state publisher with GUI for changing joint values -->
+    <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher_gui" />
+
+    <!-- Robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+    <!-- Launch RViz -->
+     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find xmobot)/rviz/xmobot_display.rviz" />
+</launch>

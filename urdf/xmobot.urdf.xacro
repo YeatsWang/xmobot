@@ -1,4 +1,33 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="xmobot">
+
+    <!-- Define parameters with default values -->
+    <xacro:arg name="robot_length" default="0.5"/>
+    <xacro:arg name="robot_width" default="0.4"/>
+    <xacro:arg name="robot_height" default="0.1"/>
+    <xacro:arg name="wheel_radius" default="0.08"/>
+    <xacro:arg name="wheel_width" default="0.05"/>
+    <xacro:arg name="wheel_separation_x" default="0.5"/>
+    <xacro:arg name="wheel_separation_y" default="0.4"/>
+    <xacro:arg name="drive_type" default="4wis"/>
+    <xacro:arg name="use_mesh" default="false"/>
+
+    <!-- 全局参数 -->
+    <xacro:property name="use_mesh" value="$(arg use_mesh)"/>
+    <xacro:property name="drive_type" value="$(arg drive_type)"/>
+    <xacro:property name="robot_length" value="$(arg robot_length)" />
+    <xacro:property name="robot_width" value="$(arg robot_width)" />
+    <xacro:property name="robot_height" value="$(arg robot_height)" />
+    <xacro:property name="wheel_radius" value="$(arg wheel_radius)"/>
+    <xacro:property name="wheel_width" value="$(arg wheel_width)" />
+    <xacro:property name="wheel_separation_x" value="$(arg wheel_separation_x)" />
+    <xacro:property name="wheel_separation_y" value="$(arg wheel_separation_y)" />
+
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="M_PI_2" value="1.570796327" />
+    <xacro:property name="DEG_TO_RAD" value="0.017453293" />
+
+    <!-- Import Xacro -->
     <xacro:include filename="$(find xmobot)/urdf/xmobot_base.xacro"/>
+
 </robot>
