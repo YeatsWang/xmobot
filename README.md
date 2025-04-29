@@ -181,9 +181,7 @@ CsuBot: Mobile robot (diff_drive) with manipulator
 ![CSUBOT](docs/images/csubot.png)
 
 CsuAmr: Four-Wheel Independent Steering and Driving mobile robot 
-![CSUAMR1](docs/images/URDF_AMR.png)
-![CSUAMR2](docs/images/STEER_ALPHA.png)
-![CSUAMR3](docs/images/realAMR.jpg)
+![CSUAMR](docs/images/csuamr.png)
 
 ---
 
