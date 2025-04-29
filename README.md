@@ -180,7 +180,10 @@ Please feel free to submit pull requests or open issues!
 CsuBot: Mobile robot (diff_drive) with manipulator
 ![CSUBOT](docs/images/csubot.png)
 
-CsuAmr: Four-Wheel Independent Steering and Driving mobile robot 
+OmniBot: Mobile robot with Mecanum wheels (The robot system is designed by Prof. Degang Xu research group in Automation School of Central South University)
+![CSUBOT](docs/images/omnibot.png)
+
+CsuAmr: Four-Wheel Independent Steering and Driving mobile robot (The robot system is designed by Prof. Degang Xu research group in Automation School of Central South University)
 ![CSUAMR](docs/images/csuamr.png)
 
 ---
