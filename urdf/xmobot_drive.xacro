@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:property name="drive_type" value="diff_drive"/>
+    <!-- diff_drive / ackermann / 4wis -->
+
+    <!-- Wheel distance parameters -->
+    <xacro:property name="wheel_separation_x" value="0.5"/>
+    <xacro:property name="wheel_separation_y" value="0.4"/>
+
+    <!-- Import wheel macro -->
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_wheel.xacro"/>
+
+    <xacro:macro name="drive_system">
+
+        <xacro:if value="${drive_type == 'diff_drive' or drive_type == 'mecanum'}">
+            <!-- Four wheels directly attached to base_link -->
+
+            <xacro:wheel prefix="front_left"  mesh_file="package://xmobot/meshes/wheel.dae"/>
+            <joint name="front_left_wheel_joint" type="continuous">
+                <parent link="base_link"/>
+                <child link="front_left_wheel_link"/>
+                <origin xyz="${wheel_separation_x/2} ${wheel_separation_y/2} 0" rpy="0 0 0"/>
+                <axis xyz="0 1 0"/>
+            </joint>
+
+            <xacro:wheel prefix="front_right" mesh_file="package://xmobot/meshes/wheel.dae"/>
+            <joint name="front_right_wheel_joint" type="continuous">
+                <parent link="base_link"/>
+                <child link="front_right_wheel_link"/>
+                <origin xyz="${wheel_separation_x/2} ${-wheel_separation_y/2} 0" rpy="0 0 0"/>
+                <axis xyz="0 1 0"/>
+            </joint>
+
+            <xacro:wheel prefix="rear_left" mesh_file="package://xmobot/meshes/wheel.dae"/>
+            <joint name="rear_left_wheel_joint" type="continuous">
+                <parent link="base_link"/>
+                <child link="rear_left_wheel_link"/>
+                <origin xyz="${-wheel_separation_x/2} ${wheel_separation_y/2} 0" rpy="0 0 0"/>
+                <axis xyz="0 1 0"/>
+            </joint>
+
+            <xacro:wheel prefix="rear_right" mesh_file="package://xmobot/meshes/wheel.dae"/>
+            <joint name="rear_right_wheel_joint" type="continuous">
+                <parent link="base_link"/>
+                <child link="rear_right_wheel_link"/>
+                <origin xyz="${-wheel_separation_x/2} ${-wheel_separation_y/2} 0" rpy="0 0 0"/>
+                <axis xyz="0 1 0"/>
+            </joint>
+
+        </xacro:if>
+
+        <xacro:if value="${drive_type == 'ackermann' or drive_type == '4wis'}">
+            <!-- 这里后续增加转向关节，双层嵌套 -->
+            <!-- （我们下一步细化四轮转向版本！） -->
+        </xacro:if>
+
+    </xacro:macro>
+
+</robot>

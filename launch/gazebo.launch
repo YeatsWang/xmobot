@@ -1,0 +1,24 @@
+<launch>
+
+    <!-- 加载robot_description -->
+    <param name="robot_description" command="$(find xacro)/xacro $(find xmobot)/urdf/xmobot.urdf.xacro"/>
+
+    <!-- 启动Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <!-- 发布joint_states -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+
+    <!-- 启动controller manager (从controllers.yaml加载控制器) -->
+<!--    <rosparam file="$(find xmobot)/config/controllers.yaml" command="load"/>-->
+
+<!--    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"-->
+<!--          args="joint_state_controller diff_drive_controller" />-->
+
+</launch>

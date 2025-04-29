@@ -1,0 +1,27 @@
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+amr_controller:
+  type: amr_controller/MotionController
+  wheel_base: 2.03
+  steering_track: 1.02
+  wheel_radius: 0.155
+  use_imu: false
+  cmd_vel_timeout: 2.0
+  enable_odom_tf: false
+  odom_frame_: odom
+  base_frame_: base_footprint
+  max_velocity: 2.0
+  max_steering_angle: M_PI / 4
+  
+gazebo_ros_control:
+  pid_gains:
+    left_fwheel_joint: {p: 50000.0, i: 30.0, d: 600.0}
+    right_fwheel_joint: {p: 50000.0, i: 30.0, d: 600.0}
+    left_bwheel_joint: {p: 50000.0, i: 30.0, d: 600.0}
+    right_bwheel_joint: {p: 50000.0, i: 30.0, d: 600.0}
+    lf_wheel_joint: {p: 1000.0, i: 5.0, d: 0.0}
+    rf_wheel_joint: {p: 1000.0, i: 5.0, d: 0.0}
+    lb_wheel_joint: {p: 1000.0, i: 5.0, d: 0.0}
+    rb_wheel_joint: {p: 1000.0, i: 5.0, d: 0.0}
