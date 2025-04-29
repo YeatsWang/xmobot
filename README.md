@@ -159,6 +159,7 @@ During startup of Gazebo simulation, you may encounter warning messages similar 
 - However, if you use velocity_controllers/JointGroupVelocityController or position_controllers/JointPositionController, these controllers can function without PID parameters in simulation.
 
 When PID parameters are fully configured for all joints, Gazebo may experience model instability or collapse under specific conditions.
+![PID_ERROR](docs/images/pid_error.png)
 - **Root cause**: Likely due to simplified mechanical structure, approximated inertial parameters, or imperfect collision modeling.
 - **Impact**: This does **not** affect basic simulation, controller testing, or URDF-based functionality at present.
 

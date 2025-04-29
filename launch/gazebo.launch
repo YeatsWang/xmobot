@@ -21,7 +21,7 @@
     </include>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"  respawn="false" output="screen"
-          args="-param robot_description -urdf -model xmobot -x 0.0 -y 0.0 -z 0.1"/>
+          args="-param robot_description -urdf -model xmobot -x 0.0 -y 0.0 -z 0.15"/>
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
           args="joint_state_controller velocity_controller" />
