@@ -76,7 +76,7 @@
         <!-- Lidar仿真 -->
         <gazebo reference="lidar_link">
             <sensor type="ray" name="lidar_sensor">
-                <pose>0 0 0.02 0 0 0</pose>
+                <pose>0 0 0 0 0 0</pose>
                 <visualize>false</visualize>
                 <update_rate>10</update_rate>
                 <ray>
@@ -84,8 +84,8 @@
                         <horizontal>
                             <samples>360</samples>
                             <resolution>1</resolution>
-                            <min_angle>-3.1415926535897931</min_angle>
-                            <max_angle>3.1415926535897931</max_angle>
+                            <min_angle>${-M_PI}</min_angle>
+                            <max_angle>${M_PI}</max_angle>
                         </horizontal>
                     </scan>
                     <range>

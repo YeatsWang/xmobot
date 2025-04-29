@@ -51,11 +51,14 @@ catkin_make
 roslaunch xmobot display.launch
 ```
 This brings up RViz with the modular Xmobot URDF model. You can visualize different drive configurations (diff, mecanum, ackermann, 4wis), along with Lidar and Camera sensors.
+![4WIS Drive](docs/images/4wis_drive.png)
+
 ### 3. Launch the Xmobot simulation in Gazebo (optional)
 ```bash
 roslaunch xmobot gazebo.launch
 ```
 You will see Xmobot spawned in a simple flat world. You can change the drive_type parameter to test other configurations.
+![4WIS Drive](docs/images/xmobot_gazebo.png)
 
 **Available drive type**:
 - diff_drive: Differential drive (default)
@@ -69,6 +72,15 @@ To switch between drive modes, simply pass the desired drive_type:
 roslaunch xmobot gazebo.launch drive_type:=4wis
 ```
 Make sure your controller configuration in config/controllers.yaml matches your selected drive type.
+#### Differential Drive or Mecanum Drive: drive_type:=diff_drive or mecanum
+![Diff Drive](docs/images/diff_drive.png)
+#### Ackermann Front Steering: drive_type:=ackermann_front
+![Diff Drive](docs/images/ackermann_front.png)
+#### Ackermann Rear Steering: drive_type:=ackermann_rear
+![Diff Drive](docs/images/ackermann_rear.png)
+#### Differential Drive: drive_type:=4wis
+![Diff Drive](docs/images/4wis_gui.png)
+
 ### 4. Low-Level Controller Testing (Recommended)
 You can directly test velocity and steering controllers without requiring teleop or navigation stack:
 
@@ -157,6 +169,17 @@ If you want to:
 - Expand to ROS2 support (URDF/Xacro, Gazebo, Controllers)
 
 Please feel free to submit pull requests or open issues!
+
+---
+
+## Extended Robot Models based on Xmobot
+CsuBot: Mobile robot (diff_drive) with manipulator
+![CSUBOT](docs/images/csubot.png)
+
+CsuAmr: Four-Wheel Independent Steering and Driving mobile robot 
+![CSUAMR1](docs/images/URDF_AMR.png)
+![CSUAMR2](docs/images/STEER_ALPHA.png)
+![CSUAMR3](docs/images/realAMR.jpg)
 
 ---
 
