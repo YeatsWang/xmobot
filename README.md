@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/XMOBOT.png" alt="Xmobot Logo" width="200"/>
+</p>
+
 # Xmobot
 Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and navigation research benchmarking across diverse drive types, including differential, Ackermann, Mecanum (omnidirectional drives), and four-wheel independent steering with driving (4WISD).
 
