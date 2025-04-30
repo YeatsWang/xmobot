@@ -13,7 +13,7 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="base_link"/>
-        <origin xyz="0 0 ${robot_height/2}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${wheel_radius*2}" rpy="0 0 0"/>
     </joint>
 
     <link name="base_link">
@@ -40,7 +40,7 @@
             </geometry>
         </collision>
 
-        <xacro:inertial_box mass="500" size_x="${robot_length}" size_y="${robot_width}" size_z="${robot_height}"/>
+        <xacro:inertial_box mass="5" size_x="${robot_length}" size_y="${robot_width}" size_z="${robot_height}"/>
     </link>
 
     <!-- 底盘结构 -->

@@ -1,7 +1,7 @@
 <launch>
 
     <arg name="use_sim_time" default="true"/>
-    <arg name="drive_type" default="4wis"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
+    <arg name="drive_type" default="diff_drive"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
     <arg name="world" default="$(find gazebo_ros)/worlds/empty.world"/>
 
     <!-- 加载robot_description -->
@@ -14,7 +14,7 @@
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world)"/>
         <arg name="use_sim_time" value="$(arg use_sim_time)"/>
-        <arg name="paused" value="true"/>
+        <arg name="paused" value="false"/>
         <arg name="gui" value="true"/>
         <arg name="headless" value="false"/>
         <arg name="debug" value="false"/>
@@ -23,28 +23,28 @@
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"  respawn="false" output="screen"
           args="-param robot_description -urdf -model xmobot -x 0.0 -y 0.0 -z 0.15"/>
 
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
-          args="joint_state_controller velocity_controller" />
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen" ns="/"
+          args="joint_state_controller" />
 
-    <!-- 动态根据drive_type判断启动哪些steering controller -->
+     动态根据drive_type判断启动哪些steering controller
     <group if="$(eval drive_type == 'diff_drive')">
-        <node name="controller_spawner_front" pkg="controller_manager" type="spawner" respawn="false"
+        <node name="controller_spawner_diff" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
               args="diff_drive_controller"/>
     </group>
 
     <group if="$(eval drive_type == 'ackermann_front')">
-        <node name="controller_spawner_front" pkg="controller_manager" type="spawner" respawn="false"
-              args="front_left_steering_controller front_right_steering_controller"/>
+        <node name="controller_spawner_front" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
+              args="velocity_controller front_left_steering_controller front_right_steering_controller"/>
     </group>
 
     <group if="$(eval drive_type == 'ackermann_rear')">
-        <node name="controller_spawner_rear" pkg="controller_manager" type="spawner" respawn="false"
-              args="rear_left_steering_controller rear_right_steering_controller"/>
+        <node name="controller_spawner_rear" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
+              args="velocity_controller rear_left_steering_controller rear_right_steering_controller"/>
     </group>
 
     <group if="$(eval drive_type == '4wis')">
-        <node name="controller_spawner_all" pkg="controller_manager" type="spawner" respawn="false"
-              args="front_left_steering_controller front_right_steering_controller rear_left_steering_controller rear_right_steering_controller"/>
+        <node name="controller_spawner_all" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
+              args="velocity_controller front_left_steering_controller front_right_steering_controller rear_left_steering_controller rear_right_steering_controller"/>
     </group>
 
     <!-- 发布joint_states -->

@@ -215,11 +215,10 @@
     <xacro:macro name="wheel_surface" params="wheel_link_name">
         <gazebo reference="${wheel_link_name}">
             <material>Gazebo/DarkGrey</material>
-            <kp>100000.0</kp>
+            <kp>1e6</kp>
             <kd>1.0</kd>
             <mu1>1.0</mu1>
             <mu2>1.0</mu2>
-            <maxVel>1.0</maxVel>
             <minDepth>0.01</minDepth>
         </gazebo>
     </xacro:macro>

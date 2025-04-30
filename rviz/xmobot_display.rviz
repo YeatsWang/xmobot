@@ -10,7 +10,6 @@ Panels:
         - /TF1
         - /TF1/Frames1
         - /TF1/Tree1
-        - /TF1/Tree1/base_footprint1
         - /Image1
         - /LaserScan1
       Splitter Ratio: 0.5
@@ -32,7 +31,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: Image
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -82,17 +81,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        front_left_steering_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         front_left_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_right_steering_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -112,17 +101,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        rear_left_steering_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         rear_left_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_right_steering_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -151,24 +130,18 @@ Visualization Manager:
           Value: true
         camera_link:
           Value: true
-        front_left_steering_link:
-          Value: true
         front_left_wheel_link:
           Value: false
-        front_right_steering_link:
-          Value: true
         front_right_wheel_link:
           Value: false
         imu_link:
           Value: false
         lidar_link:
           Value: true
-        rear_left_steering_link:
+        odom:
           Value: true
         rear_left_wheel_link:
           Value: false
-        rear_right_steering_link:
-          Value: true
         rear_right_wheel_link:
           Value: false
       Marker Alpha: 1
@@ -178,24 +151,21 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_footprint:
-          base_link:
-            camera_link:
-              {}
-            front_left_steering_link:
+        odom:
+          base_footprint:
+            base_link:
+              camera_link:
+                {}
               front_left_wheel_link:
                 {}
-            front_right_steering_link:
               front_right_wheel_link:
                 {}
-            imu_link:
-              {}
-            lidar_link:
-              {}
-            rear_left_steering_link:
+              imu_link:
+                {}
+              lidar_link:
+                {}
               rear_left_wheel_link:
                 {}
-            rear_right_steering_link:
               rear_right_wheel_link:
                 {}
       Update Interval: 0
@@ -254,7 +224,7 @@ Visualization Manager:
   Global Options:
     Background Color: 255; 255; 255
     Default Light: true
-    Fixed Frame: base_footprint
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -278,7 +248,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.116607904434204
+      Distance: 5.869520664215088
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

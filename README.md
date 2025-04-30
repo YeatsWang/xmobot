@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/XMOBOT.png" alt="Xmobot Logo" width="200"/>
+  <img src="docs/images/XMOBOT.png" alt="Xmobot" width="200"/>
 </p>
 
 # Xmobot
@@ -26,7 +26,7 @@ Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and
   - Gazebo 9 (comes with ROS Noetic)
   - `robot_state_publisher`, `joint_state_publisher`, `teleop_twist_keyboard`
     ```bash
-    sudo apt install ros-noetic-joint-state-publisher ros-noetic-robot-state-publisher ros-noetic-xacro ros-noetic-teleop_twist_keyboard
+    sudo apt install ros-noetic-joint-state-publisher ros-noetic-robot-state-publisher ros-noetic-xacro ros-noetic-teleop_twist_keyboard ros-noetic-ros-control ros-noetic-ros-controllers
     ```
 If you don't have ROS1 Noetic installed yet, follow [this guide](http://wiki.ros.org/noetic/Installation/Ubuntu).
 
@@ -79,11 +79,11 @@ Make sure your controller configuration in config/controllers.yaml matches your 
 #### Differential Drive or Mecanum Drive: drive_type:=diff_drive or mecanum
 ![Diff Drive](docs/images/diff_drive.png)
 #### Ackermann Front Steering: drive_type:=ackermann_front
-![Diff Drive](docs/images/ackermann_front.png)
+![ackermann_front](docs/images/ackermann_front.png)
 #### Ackermann Rear Steering: drive_type:=ackermann_rear
-![Diff Drive](docs/images/ackermann_rear.png)
-#### Differential Drive: drive_type:=4wis
-![Diff Drive](docs/images/4wis_gui.png)
+![ackermann_rear](docs/images/ackermann_rear.png)
+#### Four-Wheel Independent Steering and Driving : drive_type:=4wis
+![4wis](docs/images/4wis_gui.png)
 
 ### 4. Low-Level Controller Testing (Recommended)
 You can directly test velocity and steering controllers without requiring teleop or navigation stack:

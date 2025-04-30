@@ -32,7 +32,7 @@
                         </geometry>
                     </collision>
 
-                    <xacro:inertial_cylinder mass="10" radius="0.05" length="0.03"/>
+                    <xacro:inertial_cylinder mass="0.5" radius="0.05" length="0.03"/>
                 </link>
                 <joint name="${prefix}_steering_joint" type="revolute">
                     <parent link="base_link"/>
@@ -69,13 +69,7 @@
                     </geometry>
                 </collision>
 
-                <inertial>
-                    <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>  <!-- 注意这里也旋转M_PI_2 -->
-                    <mass value="5.0"/>
-                    <inertia
-                            ixx="1.0" iyy="1.0" izz="1.0"
-                            ixy="0.0" ixz="0.0" iyz="0.0"/>
-                </inertial>
+                <xacro:inertial_cylinder mass="5" radius="${wheel_radius}" length="${wheel_width}"/>
             </link>
 
             <!-- wheel joint -->
