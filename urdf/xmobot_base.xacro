@@ -40,7 +40,7 @@
             </geometry>
         </collision>
 
-        <xacro:inertial_box mass="5" size_x="${robot_length}" size_y="${robot_width}" size_z="${robot_height}"/>
+        <xacro:inertial_box mass="2" size_x="${robot_length}" size_y="${robot_width}" size_z="${robot_height}"/>
     </link>
 
     <!-- 底盘结构 -->

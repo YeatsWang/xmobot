@@ -4,7 +4,7 @@
     <arg name="robot_width" default="0.4"/>
     <arg name="robot_height" default="0.1"/>
     <arg name="wheel_radius" default="0.08"/>
-    <arg name="wheel_width" default="0.05"/>
+    <arg name="wheel_width" default="0.02"/>
     <arg name="wheel_separation_x" default="0.5"/>
     <arg name="wheel_separation_y" default="0.4"/>
     <arg name="drive_type" default="4wis"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->

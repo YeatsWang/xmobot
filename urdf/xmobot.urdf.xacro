@@ -6,7 +6,7 @@
     <xacro:arg name="robot_width" default="0.4"/>
     <xacro:arg name="robot_height" default="0.1"/>
     <xacro:arg name="wheel_radius" default="0.08"/>
-    <xacro:arg name="wheel_width" default="0.05"/>
+    <xacro:arg name="wheel_width" default="0.02"/>
     <xacro:arg name="wheel_separation_x" default="0.5"/>
     <xacro:arg name="wheel_separation_y" default="0.4"/>
     <xacro:arg name="drive_type" default="4wis"/>

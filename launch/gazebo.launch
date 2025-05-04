@@ -2,7 +2,7 @@
 
     <arg name="use_sim_time" default="true"/>
     <arg name="drive_type" default="diff_drive"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
-    <arg name="world" default="$(find gazebo_ros)/worlds/empty.world"/>
+    <arg name="world" default="$(find xmobot)/worlds/xmobot.world"/>
 
     <!-- 加载robot_description -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find xmobot)/urdf/xmobot.urdf.xacro' use_mesh:=false drive_type:=$(arg drive_type)"/>
