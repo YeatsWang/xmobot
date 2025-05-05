@@ -69,7 +69,7 @@
                     </geometry>
                 </collision>
 
-                <xacro:inertial_cylinder mass="5" radius="${wheel_radius}" length="${wheel_width}"/>
+                <xacro:inertial_cylinder mass="1" radius="${wheel_radius}" length="${wheel_width}"/>
             </link>
 
             <!-- wheel joint -->
@@ -79,6 +79,7 @@
                     <child link="${prefix}_wheel_link"/>
                     <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 0"/>
                     <axis xyz="0 1 0"/>
+                    <limit effort="30.0" velocity="10.0"/>
                 </joint>
             </xacro:if>
 
@@ -88,6 +89,7 @@
                     <child link="${prefix}_wheel_link"/>
                     <origin xyz="${x} ${y} ${-wheel_radius}" rpy="0 0 0"/>
                     <axis xyz="0 1 0"/>
+                    <limit effort="30.0" velocity="10.0"/>
                 </joint>
             </xacro:unless>
 
