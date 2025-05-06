@@ -2,7 +2,7 @@
 
     <arg name="use_sim_time" default="true"/>
     <arg name="drive_type" default="diff_drive"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
-    <arg name="world" default="$(find xmobot)/worlds/xmobot.world"/>
+    <arg name="world" default="$(find xmobot)/worlds/station.world"/>
 
     <!-- 加载robot_description -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find xmobot)/urdf/xmobot.urdf.xacro' use_mesh:=false drive_type:=$(arg drive_type)"/>
@@ -21,7 +21,7 @@
     </include>
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"  respawn="false" output="screen"
-          args="-param robot_description -urdf -model xmobot -x 0.0 -y 0.0 -z 0.05"/>
+          args="-param robot_description -urdf -model xmobot -x 9.0 -y 9.0 -z 0.05 -Y -1.57"/>
 
     <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen" ns="/"
           args="joint_state_controller" />
