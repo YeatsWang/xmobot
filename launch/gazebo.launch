@@ -3,8 +3,7 @@
     <arg name="use_sim_time" default="true"/>
     <arg name="drive_type" default="4wis"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
     <arg name="use_arms" default="true"/>
-<!--    <arg name="world" default="$(find xmobot)/worlds/xmobot.world"/>-->
-    <arg name="world" default="$(find gazebo_ros)/worlds/empty.world"/>
+    <arg name="world" default="$(find xmobot)/worlds/xmobot.world"/>
 
     <!-- 加载robot_description -->
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find xmobot)/urdf/xmobot.urdf.xacro' use_mesh:=false drive_type:=$(arg drive_type) use_arms:=$(arg use_arms)"/>
@@ -14,7 +13,7 @@
 
     <!-- 启动Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-<!--        <arg name="world_name" value="$(arg world)"/>-->
+        <arg name="world_name" value="$(arg world)"/>
         <arg name="use_sim_time" value="$(arg use_sim_time)"/>
         <arg name="paused" value="false"/>
         <arg name="gui" value="true"/>
