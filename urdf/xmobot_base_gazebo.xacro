@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <xacro:macro name="gazebo_plugins">
+    <xacro:macro name="gazebo_base_plugins" params="drive_type">
 
         <!-- Gazebo控制器插件 -->
         <gazebo>
@@ -14,7 +14,7 @@
 
         <!-- Base材质覆盖 -->
         <gazebo reference="base_link">
-            <material>Gazebo/Grey</material>
+            <material>Gazebo/Gray</material>
             <kp>100000.0</kp>
             <kd>1.0</kd>
             <mu1>1.0</mu1>
@@ -155,32 +155,6 @@
                 </plugin>
             </sensor>
         </gazebo>
-
-        <!-- 测试用 -->
-        <gazebo reference="front_left_wheel_joint">
-            <implicitSpringDamper>1</implicitSpringDamper>
-        </gazebo>
-        <gazebo reference="front_right_wheel_joint">
-            <implicitSpringDamper>1</implicitSpringDamper>
-        </gazebo>
-        <gazebo reference="rear_left_wheel_joint">
-            <implicitSpringDamper>1</implicitSpringDamper>
-        </gazebo>
-        <gazebo reference="rear_right_wheel_joint">
-            <implicitSpringDamper>1</implicitSpringDamper>
-        </gazebo>
-
-        <gazebo>
-            <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
-                <commandTopic>cmd_vel</commandTopic>
-                <odometryTopic>odom</odometryTopic>
-                <odometryFrame>odom</odometryFrame>
-                <odometryRate>20.0</odometryRate>
-                <cmdTimeout>0.25</cmdTimeout>
-                <robotBaseFrame>base_footprint</robotBaseFrame>
-            </plugin>
-        </gazebo>
-        <!-- 测试用 -->
 
     </xacro:macro>
 

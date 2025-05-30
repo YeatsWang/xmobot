@@ -63,7 +63,6 @@ roslaunch xmobot gazebo.launch
 ```
 You will see Xmobot spawned in a simple flat world. You can change the drive_type parameter to test other configurations.
 ![4WIS Drive](docs/images/xmobot_gazebo.png)
-
 **Available drive type**:
 - diff_drive: Differential drive (default)
 - mecanum: Omnidirectional drive with mecanum wheels
@@ -84,6 +83,14 @@ Make sure your controller configuration in config/controllers.yaml matches your 
 ![ackermann_rear](docs/images/ackermann_rear.png)
 #### Four-Wheel Independent Steering and Driving : drive_type:=4wis
 ![4wis](docs/images/4wis_gui.png)
+
+**Now we have updated and expanded the dual-arm version!**
+```bash
+roslaunch xmobot gazebo.launch drive_type:=4wis use_arms:=true
+```
+#### Dual-arm mobile robot: use_arms:=true
+![dual-arm](docs/images/dual_arm_gz.png)
+![dual-arm](docs/images/dual_arm.png)
 
 ### 4. Low-Level Controller Testing (Recommended)
 You can directly test velocity and steering controllers without requiring teleop or navigation stack:
@@ -117,32 +124,35 @@ xmobot/
 ├── README.md             # 项目首页描述
 ├── urdf/
 │   ├── xmobot_base.xacro         # 基础机器人主体
+│   ├── xmobot_arm.xacro          # 机械臂
 │   ├── xmobot_inertial.xacro     # 惯性矩阵计算
 │   ├── xmobot_sensors.xacro      # 激光雷达+相机模块
 │   ├── xmobot_drive.xacro        # 驱动方式参数（差速、阿克曼、全向）
-│   ├── xmobot_gazebo.xacro       # Gazebo仿真设置和Transmission接口
+│   ├── xmobot_base_gazebo.xacro  # Gazebo仿真设置和Transmission接口
+│   ├── xmobot_arm_gazebo.xacro   # Gazebo仿真设置和Transmission接口(手臂)
 │   ├── xmobot.urdf.xacro         # 主入口，组合调用以上模块
 ├── config/
-│   ├── control_gazebo.yaml       # 控制器参数
+│   ├── base_gazebo.yaml          # 主体控制器参数
+│   ├── arm_gazebo.yaml           # 手臂控制器参数
 ├── launch/
-│   ├── display.launch.py   # RViz展示
-│   ├── gazebo.launch.py    # Gazebo仿真
-├── meshes/                 # 模型网格文件
+│   ├── display.launch            # RViz展示
+│   ├── gazebo.launch             # Gazebo仿真
+├── meshes/                       # 模型网格文件
 │   ├── base.dae
 │   ├── wheel.dae
 │   ├── steering_link.dae
 │   ├── lidar.stl
 │   ├── camera.stl
 ├── scripts/
-│   ├── model_test.py       # 测试脚本
+│   ├── model_test.py             # 测试脚本
 ├── worlds/
-│   ├── simple_world.world  # Gazebo仿真环境
+│   ├── xmobot.world        # Gazebo仿真环境
 ├── LICENSE
 ```
 
 ---
 
-## Current Issues:
+## Current Issues (fixed):
 During startup of Gazebo simulation, you may encounter warning messages similar to:
 ~~~
 [ERROR] [1745910964.801114479]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/front_left_wheel_joint

@@ -6,14 +6,16 @@
     <xacro:arg name="robot_width" default="0.4"/>
     <xacro:arg name="robot_height" default="0.1"/>
     <xacro:arg name="wheel_radius" default="0.08"/>
-    <xacro:arg name="wheel_width" default="0.02"/>
+    <xacro:arg name="wheel_width" default="0.05"/>
     <xacro:arg name="wheel_separation_x" default="0.5"/>
     <xacro:arg name="wheel_separation_y" default="0.4"/>
     <xacro:arg name="drive_type" default="4wis"/>
     <xacro:arg name="use_mesh" default="false"/>
+    <xacro:arg name="use_arms" default="true"/>
 
     <!-- 全局参数 -->
     <xacro:property name="use_mesh" value="$(arg use_mesh)"/>
+    <xacro:property name="use_arms" value="$(arg use_arms)"/>
     <xacro:property name="drive_type" value="$(arg drive_type)"/>
     <xacro:property name="robot_length" value="$(arg robot_length)" />
     <xacro:property name="robot_width" value="$(arg robot_width)" />
@@ -28,6 +30,22 @@
     <xacro:property name="DEG_TO_RAD" value="0.017453293" />
 
     <!-- Import Xacro -->
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_inertial.xacro"/>
+
     <xacro:include filename="$(find xmobot)/urdf/xmobot_base.xacro"/>
+    <xacro:if value="${use_arms}">
+        <xacro:include filename="$(find xmobot)/urdf/xmobot_arm.xacro"/>
+        <xacro:xmobot_arm prefix="left_"  parent_link="base_link" arm_offset_x="0.1"  arm_offset_y="0.145" arm_offset_z="0.0"/>
+        <xacro:xmobot_arm prefix="right_" parent_link="base_link" arm_offset_x="0.1"  arm_offset_y="-0.145" arm_offset_z="0.0"/>
+    </xacro:if>
+
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_base_gazebo.xacro"/>
+    <xacro:gazebo_base_plugins drive_type="${drive_type}"/>
+
+    <xacro:include filename="$(find xmobot)/urdf/xmobot_arm_gazebo.xacro"/>
+    <xacro:if value="${use_arms}">
+        <xacro:gazebo_arm_plugins prefix="left_"/>
+        <xacro:gazebo_arm_plugins prefix="right_"/>
+    </xacro:if>
 
 </robot>
