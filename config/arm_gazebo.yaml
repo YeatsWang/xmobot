@@ -1,0 +1,62 @@
+arm_trajectory_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - left_joint_1
+    - left_joint_2
+    - left_joint_3
+    - left_joint_4
+    - left_joint_5
+    - left_joint_6
+    - right_joint_1
+    - right_joint_2
+    - right_joint_3
+    - right_joint_4
+    - right_joint_5
+    - right_joint_6
+  gains:
+    left_joint_1: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_2: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_3: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_4: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_5: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_6: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_1: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_2: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_3: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_4: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_5: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_6: { p: 1000, i: 0.0, d: 1.0 }
+  constraints:
+    goal_time: 0.5
+    stopped_velocity_tolerance: 0.01
+
+left_gripper_controller:
+  type: position_controllers/JointGroupPositionController
+  joints:
+    - left_finger_left_joint
+    - left_finger_right_joint
+
+right_gripper_controller:
+  type: position_controllers/JointGroupPositionController
+  joints:
+    - right_finger_left_joint
+    - right_finger_right_joint
+
+gazebo_ros_control:
+  pid_gains:
+    left_joint_1: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_2: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_3: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_4: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_5: { p: 1000, i: 0.0, d: 1.0 }
+    left_joint_6: { p: 1000, i: 0.0, d: 1.0 }
+    left_finger_left_joint: { p: 1000, i: 0.0, d: 1.0 }
+    left_finger_right_joint: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_1: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_2: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_3: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_4: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_5: { p: 1000, i: 0.0, d: 1.0 }
+    right_joint_6: { p: 1000, i: 0.0, d: 1.0 }
+    right_finger_left_joint: { p: 1000, i: 0.0, d: 1.0 }
+    right_finger_right_joint: { p: 1000, i: 0.0, d: 1.0 }

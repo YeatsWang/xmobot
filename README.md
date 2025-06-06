@@ -8,11 +8,11 @@ Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and
 ---
 
 ## Features
-- Support for ROS1 Noetic
+- Support for **ROS2 Foxy**
 - Modular robot design (X-Shape 4-wheel configuration)
 - Parameterized robot size and drive mode
 - Equipped with Laser Lidar and Front Camera
-- Gazebo simulation ready
+- Gazebo simulation ready with ros2_control
 - Easy to extend to other mobile bases
 
 ---
@@ -20,15 +20,14 @@ Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and
 ## System Requirements
 
 - **Ubuntu 20.04 LTS**
-- **ROS1 Noetic** installed
-- Recommended tools:
-  - RViz
-  - Gazebo 9 (comes with ROS Noetic)
-  - `robot_state_publisher`, `joint_state_publisher`, `teleop_twist_keyboard`
+- **ROS Foxy** installed and sourced
+  - Recommended ROS2 packages:
     ```bash
-    sudo apt install ros-noetic-joint-state-publisher ros-noetic-robot-state-publisher ros-noetic-xacro ros-noetic-teleop_twist_keyboard ros-noetic-ros-control ros-noetic-ros-controllers
+    sudo apt install ros-foxy-joint-state-publisher ros-foxy-robot-state-publisher ros-foxy-xacro ros-foxy-teleop-twist-keyboard ros-foxy-gazebo-ros2-control ros-foxy-gazebo-ros-pkgs  
     ```
-If you don't have ROS1 Noetic installed yet, follow [this guide](http://wiki.ros.org/noetic/Installation/Ubuntu).
+  - Gazebo 9 (provided by ros-foxy-gazebo-ros-pkgs)
+
+If you don't have ROS2 Foxy installed yet, follow [this guide](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html).
 
 ---
 
@@ -37,11 +36,11 @@ If you don't have ROS1 Noetic installed yet, follow [this guide](http://wiki.ros
 ### 1. Clone the repository
 
 ```bash
-cd ~/catkin_ws/src
-git clone https://github.com/YeatsWang/xmobot.git
-cd ~/catkin_ws
-catkin_make
-source devel/setup.bash
+cd ~/ros2_ws/src
+git clone https://github.com/YeatsWang/xmobot.git --branch ros2
+cd ~/ros2_ws
+colcon build --symlink-install
+source install/setup.zsh
 ```
 If you don't have a catkin_ws workspace yet:
 ```bash
@@ -50,16 +49,16 @@ cd ~/catkin_ws/
 catkin_make
 ```
 
-### 2. Launch the Xmobot model in RViz
+### 2.Visualize in RViz2
 ```bash
-roslaunch xmobot display.launch
+ros2 launch xmobot display_launch.py
 ```
 This brings up RViz with the modular Xmobot URDF model. You can visualize different drive configurations (diff, mecanum, ackermann, 4wis), along with Lidar and Camera sensors.
 ![4WIS Drive](docs/images/4wis_drive.png)
 
-### 3. Launch the Xmobot simulation in Gazebo (optional)
+### 3. Simulate in Gazebo
 ```bash
-roslaunch xmobot gazebo.launch
+ros2 launch xmobot gazebo_launch.py drive_type:=4wis
 ```
 You will see Xmobot spawned in a simple flat world. You can change the drive_type parameter to test other configurations.
 ![4WIS Drive](docs/images/xmobot_gazebo.png)
@@ -90,7 +89,7 @@ You can directly test velocity and steering controllers without requiring teleop
 
 **Publish wheel velocities (rad/s):**
 ~~~bash
-rostopic pub /velocity_controller/command std_msgs/Float64MultiArray "data: [2.0, 2.0, 2.0, 2.0]" -r 10
+ros2 topic pub /velocity_controller/command std_msgs/msg/Float64MultiArray "data: [2.0, 2.0, 2.0, 2.0]" -r 10
 ~~~
 **Publish steering angles (rad):**
 ~~~bash
@@ -101,12 +100,12 @@ rostopic pub /rear_right_steering_controller/command std_msgs/Float64 "data: -0.
 ~~~
 **Check loaded controllers:**
 ~~~bash
-rosservice call /controller_manager/list_controllers
+ros2 service call /controller_manager/list_controllers controller_manager_msgs/srv/ListControllers
 ~~~
 ### 5. Keyboard Teleoperation
 If you have implemented a kinematic conversion layer, you can use keyboard teleoperation to control it:
 ~~~bash
-rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/cmd_vel
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd_vel
 ~~~
 
 ---
@@ -125,8 +124,8 @@ xmobot/
 ├── config/
 │   ├── control_gazebo.yaml       # 控制器参数
 ├── launch/
-│   ├── display.launch.py   # RViz展示
-│   ├── gazebo.launch.py    # Gazebo仿真
+│   ├── display_launch.py   # RViz展示
+│   ├── gazebo_launch.py    # Gazebo仿真
 ├── meshes/                 # 模型网格文件
 │   ├── base.dae
 │   ├── wheel.dae
@@ -139,30 +138,6 @@ xmobot/
 │   ├── simple_world.world  # Gazebo仿真环境
 ├── LICENSE
 ```
-
----
-
-## Current Issues:
-During startup of Gazebo simulation, you may encounter warning messages similar to:
-~~~
-[ERROR] [1745910964.801114479]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/front_left_wheel_joint
-[ERROR] [1745910964.801282865]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/front_right_wheel_joint
-[ERROR] [1745910964.801428305]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/rear_left_wheel_joint
-[ERROR] [1745910964.801565093]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/rear_right_wheel_joint
-[ERROR] [1745910964.801702513]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/front_left_steering_joint
-[ERROR] [1745910964.801836766]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/front_right_steering_joint
-[ERROR] [1745910964.801965428]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/rear_left_steering_joint
-[ERROR] [1745910964.802093729]: No p gain specified for pid.  Namespace: /gazebo_ros_control/pid_gains/rear_right_steering_joint
-~~~
-- This occurs because gazebo_ros_control expects PID parameters for each velocity or position controlled joint.
-- When pid_gains are not explicitly set, a warning is logged.
-- However, if you use velocity_controllers/JointGroupVelocityController or position_controllers/JointPositionController, these controllers can function without PID parameters in simulation.
-
-When PID parameters are fully configured for all joints, Gazebo may experience model instability or collapse under specific conditions.
-![PID_ERROR](docs/images/pid_error.png)
-- **Root cause**: Likely due to simplified mechanical structure, approximated inertial parameters, or imperfect collision modeling.
-- **Impact**: This does **not** affect basic simulation, controller testing, or URDF-based functionality at present.
-
 ---
 
 ## Contribution
@@ -190,4 +165,4 @@ CsuAmr: Four-Wheel Independent Steering and Driving mobile robot (The robot syst
 ---
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

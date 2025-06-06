@@ -4,8 +4,6 @@
     <!-- 引用模块 -->
     <xacro:include filename="$(find xmobot)/urdf/xmobot_drive.xacro"/>
     <xacro:include filename="$(find xmobot)/urdf/xmobot_sensors.xacro"/>
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_inertial.xacro"/>
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_gazebo.xacro"/>
 
     <!-- Basement -->
     <link name="base_footprint"/>
@@ -48,8 +46,5 @@
 
     <!-- 传感器挂载 -->
     <xacro:sensors/>
-
-    <!-- gazebo控制接口 -->
-    <xacro:gazebo_plugins/>
 
 </robot>

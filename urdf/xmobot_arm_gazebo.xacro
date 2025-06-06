@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:macro name="gazebo_arm_plugins" params="prefix">
+
+        <!-- 机械臂 link_1～link_6 的材质 -->
+        <xacro:arm_surface prefix="${prefix}" link_name="link_1"/>
+        <xacro:arm_surface prefix="${prefix}" link_name="link_2"/>
+        <xacro:arm_surface prefix="${prefix}" link_name="link_3"/>
+        <xacro:arm_surface prefix="${prefix}" link_name="link_4"/>
+        <xacro:arm_surface prefix="${prefix}" link_name="link_5"/>
+        <xacro:arm_surface prefix="${prefix}" link_name="link_6"/>
+
+        <xacro:finger_surface prefix="${prefix}" link_name="flange"/>
+        <xacro:finger_surface prefix="${prefix}" link_name="finger_left"/>
+        <xacro:finger_surface prefix="${prefix}" link_name="finger_right"/>
+
+
+        <!-- —机械臂 joint_1～joint_6 的 transmission -->
+        <xacro:arm_transmission prefix="${prefix}" joint_name="joint_1"/>
+        <xacro:arm_transmission prefix="${prefix}" joint_name="joint_2"/>
+        <xacro:arm_transmission prefix="${prefix}" joint_name="joint_3"/>
+        <xacro:arm_transmission prefix="${prefix}" joint_name="joint_4"/>
+        <xacro:arm_transmission prefix="${prefix}" joint_name="joint_5"/>
+        <xacro:arm_transmission prefix="${prefix}" joint_name="joint_6"/>
+
+        <!-- 抓爪 joint transmission -->
+        <xacro:arm_transmission prefix="${prefix}" joint_name="finger_left_joint"/>
+        <xacro:arm_transmission prefix="${prefix}" joint_name="finger_right_joint"/>
+
+    </xacro:macro>
+
+    <!-- 机械臂关节 transmission -->
+    <xacro:macro name="arm_transmission" params="prefix joint_name">
+        <transmission name="${prefix}${joint_name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}${joint_name}">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}${joint_name}_motor">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1.0</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <!-- 机械臂表面材质 -->
+    <xacro:macro name="arm_surface" params="prefix link_name">
+        <gazebo reference="${prefix}${link_name}">
+            <material>Gazebo/Gray</material>
+            <kp>50000</kp>
+            <kd>1.0</kd>
+            <mu1>0.8</mu1>
+            <mu2>0.8</mu2>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- 加爪表面材质 -->
+    <xacro:macro name="finger_surface" params="prefix link_name">
+        <gazebo reference="${prefix}${link_name}">
+            <material>Gazebo/Orange</material>
+            <kp>50000</kp>
+            <kd>1.0</kd>
+            <mu1>0.8</mu1>
+            <mu2>0.8</mu2>
+        </gazebo>
+    </xacro:macro>
+
+</robot>
