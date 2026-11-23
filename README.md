@@ -7,7 +7,7 @@ Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and
 
 ## Interactive Xmobot configurator
 
-Xmobot is an extensible mobile robot model. X stands for the configurations you can build and extend. Mobot stands for mobile robot. [Open xmobot_viz](https://yeatswang.github.io/xmobot_viz/) to explore the steering and wheel speeds of the 4WISD configuration alongside traditional drivetrains, adjust the mechanical layout and export an Xmobot URDF.
+[Configure Xmobot in your browser](https://yeatswang.github.io/xmobot_viz/#geometry). Select a drivetrain, adjust the chassis, wheels and arm layout, then choose **Export Xmobot URDF**.
 
 ---
 
@@ -68,17 +68,16 @@ roslaunch xmobot gazebo.launch
 You will see Xmobot spawned in a simple flat world. You can change the drive_type parameter to test other configurations.
 ![4WIS Drive](docs/images/xmobot_gazebo.png)
 **Available drive type**:
-- diff_drive: Differential drive (default)
+- diff_drive: Differential drive
 - mecanum: Omnidirectional drive with mecanum wheels
 - ackermann_front: Front-wheel Ackermann steering
 - ackermann_rear: Rear-wheel Ackermann steering
-- 4wis: Four-Wheel Independent Steering (with driving)
+- 4wis: Four-wheel independent steering and driving (default)
 
 To switch between drive modes, simply pass the desired drive_type:
 ```bash
 roslaunch xmobot gazebo.launch drive_type:=4wis
 ```
-Make sure your controller configuration in config/controllers.yaml matches your selected drive type.
 #### Differential Drive or Mecanum Drive: drive_type:=diff_drive or mecanum
 ![Diff Drive](docs/images/diff_drive.png)
 #### Ackermann Front Steering: drive_type:=ackermann_front
@@ -88,7 +87,7 @@ Make sure your controller configuration in config/controllers.yaml matches your 
 #### Four-Wheel Independent Steering and Driving : drive_type:=4wis
 ![4wis](docs/images/4wis_gui.png)
 
-**Now we have updated and expanded the dual-arm version!**
+**Dual-arm configuration**
 ```bash
 roslaunch xmobot gazebo.launch drive_type:=4wis use_arms:=true
 ```
@@ -97,8 +96,6 @@ roslaunch xmobot gazebo.launch drive_type:=4wis use_arms:=true
 ![dual-arm](docs/images/dual_arm.png)
 
 #### Parametric mounts and arm layouts
-
-The `4wis` drive type provides four independently steered and driven wheels (4WISD). The same mechanical layout can illustrate straight travel, lateral travel, diagonal crab, centre rotation, front- or rear-axle steering and coordinated four-wheel turns. Compare the same body motion across layouts: a centre pivot with a differential base, lateral translation with Mecanum wheels, or a front-steered turn with Ackermann steering. Matching the chassis path requires different wheel commands on each layout. A fixed four-wheel differential base scrubs laterally during a pivot.
 
 Both launch files accept `arm_count:=0|1|2`. The default is two arms. The existing `use_arms:=false` switch disables all arms. The LiDAR stays at the deck centre for every arm count. A single arm mounts directly behind it on the longitudinal centreline and retains the `left_` joint names. Dual arms mount symmetrically towards the front. The LiDAR housing bottom and the arm bases follow the deck surface when body height changes. The camera stays centred on the front face as body length changes. These mount positions describe the static installation; moving-arm clearance depends on joint pose.
 
