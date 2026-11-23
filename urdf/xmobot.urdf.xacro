@@ -28,7 +28,8 @@
 
     <!-- The steering bearing (also the fixed mount spacing) sits below the body. -->
     <xacro:property name="mount_height" value="0.03"/>
-    <xacro:property name="body_center_z" value="${2 * wheel_radius + mount_height + robot_height / 2}"/>
+    <xacro:property name="deck_surface_z" value="${robot_height / 2}"/>
+    <xacro:property name="body_center_z" value="${2 * wheel_radius + mount_height + deck_surface_z}"/>
     <xacro:property name="requested_arms" value="$(arg arm_count)"/>
     <xacro:property name="installed_arms" value="${(0, 1, 2).index(requested_arms) if use_arms else 0}"/>
 
@@ -44,15 +45,15 @@
     <xacro:include filename="xmobot_arm_gazebo.xacro"/>
     <xacro:macro name="mounted_arm" params="prefix x y">
         <xacro:xmobot_arm prefix="${prefix}" parent_link="base_link"
-                          arm_offset_x="${x}" arm_offset_y="${y}" arm_offset_z="${robot_height / 2}"/>
+                          arm_offset_x="${x}" arm_offset_y="${y}" arm_offset_z="${deck_surface_z}"/>
         <xacro:gazebo_arm_plugins prefix="${prefix}"/>
     </xacro:macro>
     <xacro:if value="${installed_arms == 1}">
-        <xacro:mounted_arm prefix="left_" x="0" y="0"/>
+        <xacro:mounted_arm prefix="left_" x="${0.05 - robot_length / 2}" y="0"/>
     </xacro:if>
     <xacro:if value="${installed_arms == 2}">
-        <xacro:mounted_arm prefix="left_" x="${robot_length * 0.2}" y="${robot_width * 0.3}"/>
-        <xacro:mounted_arm prefix="right_" x="${robot_length * 0.2}" y="${-robot_width * 0.3}"/>
+        <xacro:mounted_arm prefix="left_" x="${robot_length * 0.25}" y="${robot_width * 0.3}"/>
+        <xacro:mounted_arm prefix="right_" x="${robot_length * 0.25}" y="${-robot_width * 0.3}"/>
     </xacro:if>
 
     <xacro:include filename="xmobot_base_gazebo.xacro"/>

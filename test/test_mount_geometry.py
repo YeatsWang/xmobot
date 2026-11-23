@@ -40,6 +40,20 @@ class MountGeometry(unittest.TestCase):
                     self.assertAlmostEqual(cx - .025, length / 2)
                     self.assertEqual((cy, cz), (0, 0))
 
+    def test_mount_heights_follow_the_deck_in_ground_coordinates(self):
+        for thickness in (.05, .10, .21):
+            for count in (0, 1, 2):
+                with self.subTest(thickness=thickness, count=count):
+                    root = expand(robot_height=thickness, wheel_radius=.08, arm_count=count)
+                    body_z = origin(root.find("joint[@name='base_joint']"))[2]
+                    deck_z = 2 * .08 + .03 + thickness
+                    lidar_z = origin(root.find("joint[@name='lidar_joint']"))[2]
+                    self.assertAlmostEqual(body_z + lidar_z - .025, deck_z)
+                    for side in ('left', 'right'):
+                        joint = root.find(f"joint[@name='{side}_joint_1']")
+                        if joint is not None:
+                            self.assertAlmostEqual(body_z + origin(joint)[2], deck_z)
+
     def test_arm_layouts_and_transmissions(self):
         for count in range(3):
             with self.subTest(count=count):
@@ -47,14 +61,16 @@ class MountGeometry(unittest.TestCase):
                 joints = {j.get('name'): j for j in root.findall('joint')}
                 arm_joints = [joints[side + '_joint_1'] for side in ('left', 'right') if side + '_joint_1' in joints]
                 self.assertEqual(len(arm_joints), count)
-                lidar_x, _, lidar_z = origin(joints['lidar_joint'])
+                lidar_x, lidar_y, lidar_z = origin(joints['lidar_joint'])
+                self.assertEqual((lidar_x, lidar_y), (0, 0))
                 self.assertAlmostEqual(lidar_z - .025, .21 / 2)
                 for joint in arm_joints:
                     x, y, z = origin(joint)
                     self.assertAlmostEqual(z, .21 / 2)
                     self.assertGreater((x - lidar_x)**2 + y**2, (.05 + .05)**2)
                 if count == 1:
-                    self.assertEqual(origin(arm_joints[0])[:2], (0, 0))
+                    self.assertAlmostEqual(origin(arm_joints[0])[0], .05 - .32 / 2)
+                    self.assertEqual(origin(arm_joints[0])[1], 0)
                 if count == 2:
                     self.assertAlmostEqual(origin(arm_joints[0])[1], -origin(arm_joints[1])[1])
                 for tx in root.findall('transmission/joint'):
