@@ -18,7 +18,7 @@
                         </xacro:if>
                         <xacro:unless value="${use_mesh}">
                             <geometry>
-                                <cylinder radius="0.05" length="0.03"/>
+                                <cylinder radius="0.05" length="${mount_height}"/>
                             </geometry>
                         </xacro:unless>
                         <material name="Gray">
@@ -28,16 +28,16 @@
                     <collision>
                         <origin xyz="0 0 0" rpy="0 0 0"/>
                         <geometry>
-                            <cylinder radius="0.05" length="0.03"/>
+                            <cylinder radius="0.05" length="${mount_height}"/>
                         </geometry>
                     </collision>
 
-                    <xacro:inertial_cylinder mass="0.5" radius="0.05" length="0.03"/>
+                    <xacro:inertial_cylinder mass="0.5" radius="0.05" length="${mount_height}"/>
                 </link>
                 <joint name="${prefix}_steering_joint" type="revolute">
                     <parent link="base_link"/>
                     <child link="${prefix}_steering_link"/>
-                    <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
+                    <origin xyz="${x} ${y} ${-(robot_height + mount_height) / 2}" rpy="0 0 0"/>
                     <axis xyz="0 0 1"/>
                     <limit lower="${-90*DEG_TO_RAD}" upper="${90*DEG_TO_RAD}" effort="1.0" velocity="1.0"/>
                 </joint>
@@ -77,7 +77,7 @@
                 <joint name="${prefix}_wheel_joint" type="continuous">
                     <parent link="${prefix}_steering_link"/>
                     <child link="${prefix}_wheel_link"/>
-                    <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 0"/>
+                    <origin xyz="0 0 ${-wheel_radius - mount_height / 2}" rpy="0 0 0"/>
                     <axis xyz="0 1 0"/>
                     <limit effort="30.0" velocity="10.0"/>
                 </joint>
@@ -87,7 +87,7 @@
                 <joint name="${prefix}_wheel_joint" type="continuous">
                     <parent link="base_link"/>
                     <child link="${prefix}_wheel_link"/>
-                    <origin xyz="${x} ${y} ${-wheel_radius}" rpy="0 0 0"/>
+                    <origin xyz="${x} ${y} ${wheel_radius - body_center_z}" rpy="0 0 0"/>
                     <axis xyz="0 1 0"/>
                     <limit effort="30.0" velocity="10.0"/>
                 </joint>

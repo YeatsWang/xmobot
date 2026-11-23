@@ -92,6 +92,19 @@ roslaunch xmobot gazebo.launch drive_type:=4wis use_arms:=true
 ![dual-arm](docs/images/dual_arm_gz.png)
 ![dual-arm](docs/images/dual_arm.png)
 
+#### Parametric mounts and arm layouts
+
+The `4wis` drive type provides four independently steered and driven wheels (4WISD). The same mechanical layout can illustrate straight travel, lateral travel, diagonal crab, centre rotation, front- or rear-axle steering and coordinated four-wheel turns. Each motion requires matching wheel angles and signed wheel speeds.
+
+Both launch files accept `arm_count:=0|1|2`. The default is two arms. The existing `use_arms:=false` switch disables all arms. A single arm uses the deck centre and the existing `left_` joint names. With arms installed, the LiDAR sits at the rear of the deck. The camera stays centred on the front face as body length changes. These mount positions describe the static installation; moving-arm clearance depends on joint pose.
+
+```bash
+roslaunch xmobot display.launch drive_type:=4wis arm_count:=1 robot_length:=0.82
+roslaunch xmobot gazebo.launch drive_type:=4wis arm_count:=2 robot_height:=0.21 wheel_radius:=0.05
+```
+
+For the primitive model, wheel centres lie one radius above the footprint. The deck underside is one wheel diameter plus the 0.03 m mount height above ground. With a centred arm, use a body length above 0.20 m to separate the two 0.05 m radius mounting footprints. Select body dimensions and wheel spacing that accommodate your payload and wheel hardware.
+
 ### 4. Low-Level Controller Testing (Recommended)
 You can directly test velocity and steering controllers without requiring teleop or navigation stack:
 

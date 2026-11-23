@@ -10,6 +10,7 @@
     <arg name="drive_type" default="4wis"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
     <arg name="use_mesh" default="false"/>
     <arg name="use_arms" default="true"/>
+    <arg name="arm_count" default="2"/>
 
     <!-- 将arg传给xacro -->
     <param name="robot_description" command="
@@ -22,7 +23,7 @@
     wheel_separation_x:=$(arg wheel_separation_x)
     wheel_separation_y:=$(arg wheel_separation_y)
     drive_type:=$(arg drive_type)
-    use_mesh:=$(arg use_mesh)"/>
+    arm_count:=$(arg arm_count) use_arms:=$(arg use_arms) use_mesh:=$(arg use_mesh)"/>
 <!--    <param name="robot_description" command="-->
 <!--    $(find xacro)/xacro $(find xmobot)/urdf/xmobot.urdf.xacro-->
 <!--    drive_type:=$(arg drive_type)-->

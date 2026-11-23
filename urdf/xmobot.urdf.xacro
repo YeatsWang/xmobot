@@ -12,6 +12,7 @@
     <xacro:arg name="drive_type" default="4wis"/>
     <xacro:arg name="use_mesh" default="false"/>
     <xacro:arg name="use_arms" default="true"/>
+    <xacro:arg name="arm_count" default="2"/>
 
     <!-- 全局参数 -->
     <xacro:property name="use_mesh" value="$(arg use_mesh)"/>
@@ -25,27 +26,36 @@
     <xacro:property name="wheel_separation_x" value="$(arg wheel_separation_x)" />
     <xacro:property name="wheel_separation_y" value="$(arg wheel_separation_y)" />
 
+    <!-- The steering bearing (also the fixed mount spacing) sits below the body. -->
+    <xacro:property name="mount_height" value="0.03"/>
+    <xacro:property name="body_center_z" value="${2 * wheel_radius + mount_height + robot_height / 2}"/>
+    <xacro:property name="requested_arms" value="$(arg arm_count)"/>
+    <xacro:property name="installed_arms" value="${(0, 1, 2).index(requested_arms) if use_arms else 0}"/>
+
     <xacro:property name="M_PI" value="3.1415926535897931" />
     <xacro:property name="M_PI_2" value="1.570796327" />
     <xacro:property name="DEG_TO_RAD" value="0.017453293" />
 
     <!-- Import Xacro -->
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_inertial.xacro"/>
+    <xacro:include filename="xmobot_inertial.xacro"/>
 
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_base.xacro"/>
-    <xacro:if value="${use_arms}">
-        <xacro:include filename="$(find xmobot)/urdf/xmobot_arm.xacro"/>
-        <xacro:xmobot_arm prefix="left_"  parent_link="base_link" arm_offset_x="0.1"  arm_offset_y="0.145" arm_offset_z="0.0"/>
-        <xacro:xmobot_arm prefix="right_" parent_link="base_link" arm_offset_x="0.1"  arm_offset_y="-0.145" arm_offset_z="0.0"/>
+    <xacro:include filename="xmobot_base.xacro"/>
+    <xacro:include filename="xmobot_arm.xacro"/>
+    <xacro:include filename="xmobot_arm_gazebo.xacro"/>
+    <xacro:macro name="mounted_arm" params="prefix x y">
+        <xacro:xmobot_arm prefix="${prefix}" parent_link="base_link"
+                          arm_offset_x="${x}" arm_offset_y="${y}" arm_offset_z="${robot_height / 2}"/>
+        <xacro:gazebo_arm_plugins prefix="${prefix}"/>
+    </xacro:macro>
+    <xacro:if value="${installed_arms == 1}">
+        <xacro:mounted_arm prefix="left_" x="0" y="0"/>
+    </xacro:if>
+    <xacro:if value="${installed_arms == 2}">
+        <xacro:mounted_arm prefix="left_" x="${robot_length * 0.2}" y="${robot_width * 0.3}"/>
+        <xacro:mounted_arm prefix="right_" x="${robot_length * 0.2}" y="${-robot_width * 0.3}"/>
     </xacro:if>
 
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_base_gazebo.xacro"/>
+    <xacro:include filename="xmobot_base_gazebo.xacro"/>
     <xacro:gazebo_base_plugins drive_type="${drive_type}"/>
-
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_arm_gazebo.xacro"/>
-    <xacro:if value="${use_arms}">
-        <xacro:gazebo_arm_plugins prefix="left_"/>
-        <xacro:gazebo_arm_plugins prefix="right_"/>
-    </xacro:if>
 
 </robot>

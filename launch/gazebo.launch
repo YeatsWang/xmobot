@@ -3,10 +3,20 @@
     <arg name="use_sim_time" default="true"/>
     <arg name="drive_type" default="4wis"/><!-- diff_drive, mecanum, ackermann_front, ackermann_rear, 4wis-->
     <arg name="use_arms" default="true"/>
+    <arg name="arm_count" default="2"/>
+    <arg name="robot_length" default="0.5"/>
+    <arg name="robot_width" default="0.4"/>
+    <arg name="robot_height" default="0.1"/>
+    <arg name="wheel_radius" default="0.08"/>
+    <arg name="wheel_width" default="0.05"/>
+    <arg name="wheel_separation_x" default="0.5"/>
+    <arg name="wheel_separation_y" default="0.4"/>
     <arg name="world" default="$(find xmobot)/worlds/xmobot.world"/>
 
     <!-- 加载robot_description -->
-    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find xmobot)/urdf/xmobot.urdf.xacro' use_mesh:=false drive_type:=$(arg drive_type) use_arms:=$(arg use_arms)"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find xmobot)/urdf/xmobot.urdf.xacro' use_mesh:=false drive_type:=$(arg drive_type) use_arms:=$(arg use_arms) arm_count:=$(arg arm_count)
+        robot_length:=$(arg robot_length) robot_width:=$(arg robot_width) robot_height:=$(arg robot_height) wheel_radius:=$(arg wheel_radius)
+        wheel_width:=$(arg wheel_width) wheel_separation_x:=$(arg wheel_separation_x) wheel_separation_y:=$(arg wheel_separation_y)"/>
 
     <!-- 启动controller manager (base_gazebo.yaml加载控制器) -->
     <rosparam file="$(find xmobot)/config/base_gazebo.yaml" command="load"/>
@@ -48,9 +58,14 @@
               args="velocity_controller front_left_steering_controller front_right_steering_controller rear_left_steering_controller rear_right_steering_controller"/>
     </group>
 
-    <group if="$(arg use_arms)">
+    <group if="$(eval arg('use_arms') and arg('arm_count') in (1, 2))">
         <rosparam file="$(find xmobot)/config/arm_gazebo.yaml" command="load"/>
-        <node name="controller_arms" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/"
+        <group if="$(eval arg('arm_count') == 1)">
+            <rosparam param="arm_trajectory_controller/joints">[left_joint_1, left_joint_2, left_joint_3, left_joint_4, left_joint_5, left_joint_6]</rosparam>
+            <node name="controller_arms" pkg="controller_manager" type="spawner"
+                  args="arm_trajectory_controller left_gripper_controller"/>
+        </group>
+        <node if="$(eval arg('arm_count') == 2)" name="controller_arms" pkg="controller_manager" type="spawner"
               args="arm_trajectory_controller left_gripper_controller right_gripper_controller"/>
     </group>
 

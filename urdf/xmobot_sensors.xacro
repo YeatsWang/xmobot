@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:property name="lidar_height" value="0.08"/>
+    <xacro:property name="lidar_height" value="${robot_height / 2 + 0.025}"/>
     <xacro:property name="camera_height" value="0.0"/>
-    <xacro:property name="camera_offset_x" value="0.3"/>
+    <xacro:property name="camera_offset_x" value="${robot_length / 2 + 0.025}"/>
 
     <xacro:macro name="sensors">
         <!-- Lidar -->
@@ -30,7 +30,7 @@
         <joint name="lidar_joint" type="fixed">
             <parent link="base_link"/>
             <child link="lidar_link"/>
-            <origin xyz="0 0 ${lidar_height}" rpy="0 0 0"/>
+            <origin xyz="${0.05 - robot_length / 2 if installed_arms else 0} 0 ${lidar_height}" rpy="0 0 0"/>
         </joint>
 
         <!-- Camera -->
