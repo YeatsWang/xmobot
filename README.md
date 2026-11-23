@@ -218,5 +218,42 @@ CsuAmr: Four-Wheel Independent Steering and Driving mobile robot (The robot syst
 
 ---
 
+## Citation
+
+[Download both BibTeX entries](xmobot.bib), or copy the entry for the work you use.
+
+### Xmobot platform and robotics education
+
+[IEEE Xplore · IEEE Transactions on Learning Technologies](https://ieeexplore.ieee.org/document/11475163)
+
+```bibtex
+@article{wang2026xmobot,
+  author = {Wang, Yizhi and Wang, Minjuan and Xu, Degang and Lee, John Chi-Kin and Xie, Yongfang},
+  title = {{Xmobot}: Enabling Rapid Build-and-Train Robotics Education With Agentic AI},
+  journal = {IEEE Transactions on Learning Technologies},
+  volume = {19},
+  pages = {376--387},
+  year = {2026},
+  doi = {10.1109/TLT.2026.3681123},
+  url = {https://ieeexplore.ieee.org/document/11475163}
+}
+```
+
+### 4WISD kinematic controller
+
+[IEEE Xplore · China Automation Congress](https://ieeexplore.ieee.org/document/11487174)
+
+```bibtex
+@inproceedings{wang2025universal,
+  author = {Wang, Yizhi and Xu, Degang and Xie, Yongfang},
+  title = {Universal Multi-Mode Kinematic Controller for Four-Wheel Independent Steering and Driving Mobile Robots},
+  booktitle = {2025 China Automation Congress (CAC)},
+  year = {2025},
+  pages = {4491--4496},
+  doi = {10.1109/CAC67268.2025.11487174},
+  url = {https://ieeexplore.ieee.org/document/11487174}
+}
+```
+
 ## License
 This project is licensed under the MIT License.
