@@ -5,15 +5,9 @@
 # Xmobot
 Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and navigation research benchmarking across diverse drive types, including differential, Ackermann, Mecanum (omnidirectional drives), and four-wheel independent steering with driving (4WISD).
 
-## Interactive demo and URDF export
+## Interactive Xmobot configurator
 
-[Open xmobot_viz](https://yeatswang.github.io/xmobot_viz/) to change chassis dimensions, wheel size and arm placement, then download the configured URDF directly from your browser.
-
-Compare the same motion side by side: [differential pivot](https://yeatswang.github.io/xmobot_viz/#pivot), [Mecanum slide](https://yeatswang.github.io/xmobot_viz/#lateral), or [Ackermann turn](https://yeatswang.github.io/xmobot_viz/#ackermann).
-
-[![Watch the Xmobot comparison film](https://yeatswang.github.io/xmobot_viz/assets/film.jpg)](https://yeatswang.github.io/xmobot_viz/#film)
-
-[Watch the narrated film](https://yeatswang.github.io/xmobot_viz/#film) · [Download MP4](https://yeatswang.github.io/xmobot_viz/Xmobot.mp4) · [Visualizer source](https://github.com/YeatsWang/xmobot_viz)
+Xmobot is an extensible mobile robot model. X stands for the configurations you can build and extend. Mobot stands for mobile robot. [Open xmobot_viz](https://yeatswang.github.io/xmobot_viz/) to explore the steering and wheel speeds of the 4WISD configuration alongside traditional drivetrains, adjust the mechanical layout and export an Xmobot URDF.
 
 ---
 
