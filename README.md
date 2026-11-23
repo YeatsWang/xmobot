@@ -5,6 +5,16 @@
 # Xmobot
 Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and navigation research benchmarking across diverse drive types, including differential, Ackermann, Mecanum (omnidirectional drives), and four-wheel independent steering with driving (4WISD).
 
+## Interactive demo and URDF export
+
+[Open xmobot_viz](https://yeatswang.github.io/xmobot_viz/) to change chassis dimensions, wheel size and arm placement, then download the configured URDF directly from your browser.
+
+Compare the same motion side by side: [differential pivot](https://yeatswang.github.io/xmobot_viz/#pivot), [Mecanum slide](https://yeatswang.github.io/xmobot_viz/#lateral), or [Ackermann turn](https://yeatswang.github.io/xmobot_viz/#ackermann).
+
+[![Watch the Xmobot comparison film](https://yeatswang.github.io/xmobot_viz/assets/film.jpg)](https://yeatswang.github.io/xmobot_viz/#film)
+
+[Watch the narrated film](https://yeatswang.github.io/xmobot_viz/#film) · [Download MP4](https://yeatswang.github.io/xmobot_viz/Xmobot.mp4) · [Visualizer source](https://github.com/YeatsWang/xmobot_viz)
+
 ---
 
 ## Features
@@ -102,6 +112,8 @@ Both launch files accept `arm_count:=0|1|2`. The default is two arms. The existi
 roslaunch xmobot display.launch drive_type:=4wis arm_count:=1 robot_length:=0.82
 roslaunch xmobot gazebo.launch drive_type:=4wis arm_count:=2 robot_height:=0.21 wheel_radius:=0.05
 ```
+
+The default single-arm mount is halfway between the deck centre and rear edge. A 0.50 m chassis places it at x = −0.125 m. Set `arm_mount_x` (metres, positive forward) to move the arm or the symmetric pair fore/aft. For two arms, `arm_spacing` sets the centre-to-centre separation. Both default to `auto`. Within the visualizer's size range, positions are clipped to the deck and keep at least 2 mm between the LiDAR and arm footprints.
 
 For the primitive model, wheel centres lie one radius above the footprint. The deck underside is one wheel diameter plus the 0.03 m mount height above ground. With a single arm, use a body length above 0.30 m to separate the two 0.05 m radius mounting footprints on the centreline. Select body dimensions and wheel spacing that accommodate your payload and wheel hardware.
 

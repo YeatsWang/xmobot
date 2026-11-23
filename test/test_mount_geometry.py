@@ -54,6 +54,19 @@ class MountGeometry(unittest.TestCase):
                         if joint is not None:
                             self.assertAlmostEqual(body_z + origin(joint)[2], deck_z)
 
+    def test_adjustable_mounts(self):
+        def position(count, **args):
+            root = expand(arm_count=count, **args)
+            return origin(root.find("joint[@name='left_joint_1']"))[:2]
+
+        self.assertEqual(position(1), (-.125, 0))
+        self.assertEqual(position(1, arm_mount_x=-.16), (-.16, 0))
+        self.assertEqual(position(1, arm_mount_x=0), (-.102, 0))
+        self.assertEqual(position(1, arm_mount_x=-1), (-.2, 0))
+        self.assertEqual(position(2, arm_mount_x=.075, arm_spacing=.22), (.075, .11))
+        x, y = position(2, robot_width=.25, arm_mount_x=0, arm_spacing=.13)
+        self.assertAlmostEqual(x*x + y*y, .102**2)
+
     def test_arm_layouts_and_transmissions(self):
         for count in range(3):
             with self.subTest(count=count):
@@ -69,7 +82,7 @@ class MountGeometry(unittest.TestCase):
                     self.assertAlmostEqual(z, .21 / 2)
                     self.assertGreater((x - lidar_x)**2 + y**2, (.05 + .05)**2)
                 if count == 1:
-                    self.assertAlmostEqual(origin(arm_joints[0])[0], .05 - .32 / 2)
+                    self.assertAlmostEqual(origin(arm_joints[0])[0], -.102)
                     self.assertEqual(origin(arm_joints[0])[1], 0)
                 if count == 2:
                     self.assertAlmostEqual(origin(arm_joints[0])[1], -origin(arm_joints[1])[1])

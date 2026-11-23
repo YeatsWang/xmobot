@@ -13,6 +13,8 @@
     <xacro:arg name="use_mesh" default="false"/>
     <xacro:arg name="use_arms" default="true"/>
     <xacro:arg name="arm_count" default="2"/>
+    <xacro:arg name="arm_mount_x" default="auto"/>
+    <xacro:arg name="arm_spacing" default="auto"/>
 
     <!-- 全局参数 -->
     <xacro:property name="use_mesh" value="$(arg use_mesh)"/>
@@ -33,6 +35,16 @@
     <xacro:property name="requested_arms" value="$(arg arm_count)"/>
     <xacro:property name="installed_arms" value="${(0, 1, 2).index(requested_arms) if use_arms else 0}"/>
 
+    <!-- Positions are in the base frame. Keep the 50 mm arm feet on the deck
+         and leave 2 mm between the LiDAR housing and each arm footprint. -->
+    <xacro:property name="requested_arm_x" value="$(arg arm_mount_x)"/>
+    <xacro:property name="requested_spacing" value="$(arg arm_spacing)"/>
+    <xacro:property name="edge_limit" value="${robot_length / 2 - 0.05}"/>
+    <xacro:property name="single_x" value="${max(-edge_limit, min(-0.102, -robot_length / 4 if requested_arm_x == 'auto' else requested_arm_x))}"/>
+    <xacro:property name="dual_y" value="${min(robot_width / 2 - 0.05, max(0.051, robot_width * 0.3 if requested_spacing == 'auto' else requested_spacing / 2))}"/>
+    <xacro:property name="dual_min_x" value="${sqrt(max(0, 0.102 ** 2 - dual_y ** 2))}"/>
+    <xacro:property name="dual_x" value="${min(edge_limit, max(dual_min_x, robot_length / 4 if requested_arm_x == 'auto' else requested_arm_x))}"/>
+
     <xacro:property name="M_PI" value="3.1415926535897931" />
     <xacro:property name="M_PI_2" value="1.570796327" />
     <xacro:property name="DEG_TO_RAD" value="0.017453293" />
@@ -49,11 +61,11 @@
         <xacro:gazebo_arm_plugins prefix="${prefix}"/>
     </xacro:macro>
     <xacro:if value="${installed_arms == 1}">
-        <xacro:mounted_arm prefix="left_" x="${0.05 - robot_length / 2}" y="0"/>
+        <xacro:mounted_arm prefix="left_" x="${single_x}" y="0"/>
     </xacro:if>
     <xacro:if value="${installed_arms == 2}">
-        <xacro:mounted_arm prefix="left_" x="${robot_length * 0.25}" y="${robot_width * 0.3}"/>
-        <xacro:mounted_arm prefix="right_" x="${robot_length * 0.25}" y="${-robot_width * 0.3}"/>
+        <xacro:mounted_arm prefix="left_" x="${dual_x}" y="${dual_y}"/>
+        <xacro:mounted_arm prefix="right_" x="${dual_x}" y="${-dual_y}"/>
     </xacro:if>
 
     <xacro:include filename="xmobot_base_gazebo.xacro"/>

@@ -11,6 +11,8 @@
     <arg name="use_mesh" default="false"/>
     <arg name="use_arms" default="true"/>
     <arg name="arm_count" default="2"/>
+    <arg name="arm_mount_x" default="auto"/>
+    <arg name="arm_spacing" default="auto"/>
 
     <!-- 将arg传给xacro -->
     <param name="robot_description" command="
@@ -23,7 +25,7 @@
     wheel_separation_x:=$(arg wheel_separation_x)
     wheel_separation_y:=$(arg wheel_separation_y)
     drive_type:=$(arg drive_type)
-    arm_count:=$(arg arm_count) use_arms:=$(arg use_arms) use_mesh:=$(arg use_mesh)"/>
+    arm_count:=$(arg arm_count) arm_mount_x:=$(arg arm_mount_x) arm_spacing:=$(arg arm_spacing) use_arms:=$(arg use_arms) use_mesh:=$(arg use_mesh)"/>
 <!--    <param name="robot_description" command="-->
 <!--    $(find xacro)/xacro $(find xmobot)/urdf/xmobot.urdf.xacro-->
 <!--    drive_type:=$(arg drive_type)-->
