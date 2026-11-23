@@ -3,6 +3,9 @@
 </p>
 
 # Xmobot
+
+**ROS 2 Foxy** (`ros2`) · [ROS 1 Noetic edition](https://github.com/YeatsWang/xmobot/tree/ros)
+
 Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and navigation research benchmarking across diverse drive types, including differential, Ackermann, Mecanum (omnidirectional drives), and four-wheel independent steering with driving (4WISD).
 
 ---
@@ -146,7 +149,6 @@ If you want to:
 - Improve mechanical design and model fidelity
 - Solve parameters tuning issues (PID + physics parameters optimization)
 - Add new sensor modules (3D LiDAR or Depth camera)
-- Expand to ROS2 support (URDF/Xacro, Gazebo, Controllers)
 
 Please feel free to submit pull requests or open issues!
 
