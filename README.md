@@ -8,140 +8,71 @@
 
 Xmobot is a flexible, modular mobile robot platform for SLAM, path planning, and navigation research benchmarking across diverse drive types, including differential, Ackermann, Mecanum (omnidirectional drives), and four-wheel independent steering with driving (4WISD).
 
----
+## Interactive Xmobot configurator
 
-## Features
-- Support for **ROS2 Foxy**
-- Modular robot design (X-Shape 4-wheel configuration)
-- Parameterized robot size and drive mode
-- Equipped with Laser Lidar and Front Camera
-- Gazebo simulation ready with ros2_control
-- Easy to extend to other mobile bases
+[Open Xmobot Viz](https://yeatswang.github.io/xmobot_viz/#geometry) to compare rotation, translation and turning. Select a drivetrain, set the chassis dimensions, wheels and arm layout, then choose **Export Xmobot URDF**.
 
----
+## Quick start with ROS 2 Foxy
 
-## System Requirements
-
-- **Ubuntu 20.04 LTS**
-- **ROS Foxy** installed and sourced
-  - Recommended ROS2 packages:
-    ```bash
-    sudo apt install ros-foxy-joint-state-publisher ros-foxy-robot-state-publisher ros-foxy-xacro ros-foxy-teleop-twist-keyboard ros-foxy-gazebo-ros2-control ros-foxy-gazebo-ros-pkgs  
-    ```
-  - Gazebo 9 (provided by ros-foxy-gazebo-ros-pkgs)
-
-If you don't have ROS2 Foxy installed yet, follow [this guide](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html).
-
----
-
-## Quick Start
-
-### 1. Clone the repository
+On Ubuntu 20.04 with ROS 2 Foxy, colcon and rosdep installed, run the following in Bash.
 
 ```bash
+source /opt/ros/foxy/setup.bash
+mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
-git clone https://github.com/YeatsWang/xmobot.git --branch ros2
+git clone --branch ros2 https://github.com/YeatsWang/xmobot.git
 cd ~/ros2_ws
-colcon build --symlink-install
-source install/setup.zsh
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --packages-select xmobot
+source install/setup.bash
 ```
-If you don't have a catkin_ws workspace yet:
+
+### Preview a model in RViz2
+
+Open a single-arm model, or point RViz2 at the URDF you exported from the browser.
+
 ```bash
-mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws/
-catkin_make
+ros2 launch xmobot display_launch.py arm_count:=1
+ros2 launch xmobot display_launch.py urdf_file:="$HOME/Downloads/xmobot-4wis-0arm.urdf"
 ```
 
-### 2.Visualize in RViz2
+Use the path to your downloaded file in the second command. The exported URDF already contains your chosen dimensions.
+
+![Xmobot in RViz](docs/images/4wis_drive.png)
+
+### Load the model in Gazebo Classic
+
+Pass the same mechanical settings to the ROS 2 launcher to build the model with its Gazebo plugins. This example loads a longer chassis with rear-wheel Ackermann steering and a single arm.
+
 ```bash
-ros2 launch xmobot display_launch.py
+ros2 launch xmobot gazebo_launch.py drive_type:=ackermann_rear robot_length:=0.70 wheel_separation_x:=0.58 arm_count:=1
 ```
-This brings up RViz with the modular Xmobot URDF model. You can visualize different drive configurations (diff, mecanum, ackermann, 4wis), along with Lidar and Camera sensors.
-![4WIS Drive](docs/images/4wis_drive.png)
 
-### 3. Simulate in Gazebo
+Gazebo publishes simulated joint positions through the joint state broadcaster. You can inspect the active controllers in a second sourced terminal.
+
 ```bash
-ros2 launch xmobot gazebo_launch.py drive_type:=4wis
+ros2 service call /controller_manager/list_controllers controller_manager_msgs/srv/ListControllers '{}'
 ```
-You will see Xmobot spawned in a simple flat world. You can change the drive_type parameter to test other configurations.
-![4WIS Drive](docs/images/xmobot_gazebo.png)
 
-**Available drive type**:
-- diff_drive: Differential drive (default)
-- mecanum: Omnidirectional drive with mecanum wheels
-- ackermann_front: Front-wheel Ackermann steering
-- ackermann_rear: Rear-wheel Ackermann steering
-- 4wis: Four-Wheel Independent Steering (with driving)
+The Mecanum model uses cylindrical wheel collisions. Reproducing its sideways motion in Gazebo requires a roller-contact model or equivalent contact dynamics.
 
-To switch between drive modes, simply pass the desired drive_type:
-```bash
-roslaunch xmobot gazebo.launch drive_type:=4wis
-```
-Make sure your controller configuration in config/controllers.yaml matches your selected drive type.
-#### Differential Drive or Mecanum Drive: drive_type:=diff_drive or mecanum
-![Diff Drive](docs/images/diff_drive.png)
-#### Ackermann Front Steering: drive_type:=ackermann_front
-![ackermann_front](docs/images/ackermann_front.png)
-#### Ackermann Rear Steering: drive_type:=ackermann_rear
-![ackermann_rear](docs/images/ackermann_rear.png)
-#### Four-Wheel Independent Steering and Driving : drive_type:=4wis
-![4wis](docs/images/4wis_gui.png)
+![Xmobot in Gazebo](docs/images/xmobot_gazebo.png)
 
-### 4. Low-Level Controller Testing (Recommended)
-You can directly test velocity and steering controllers without requiring teleop or navigation stack:
+### Mechanical parameters
 
-**Publish wheel velocities (rad/s):**
-~~~bash
-ros2 topic pub /velocity_controller/command std_msgs/msg/Float64MultiArray "data: [2.0, 2.0, 2.0, 2.0]" -r 10
-~~~
-**Publish steering angles (rad):**
-~~~bash
-rostopic pub /front_left_steering_controller/command std_msgs/Float64 "data: 0.2"
-rostopic pub /front_right_steering_controller/command std_msgs/Float64 "data: 0.2"
-rostopic pub /rear_left_steering_controller/command std_msgs/Float64 "data: -0.2"
-rostopic pub /rear_right_steering_controller/command std_msgs/Float64 "data: -0.2"
-~~~
-**Check loaded controllers:**
-~~~bash
-ros2 service call /controller_manager/list_controllers controller_manager_msgs/srv/ListControllers
-~~~
-### 5. Keyboard Teleoperation
-If you have implemented a kinematic conversion layer, you can use keyboard teleoperation to control it:
-~~~bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/cmd_vel
-~~~
+Both launchers accept these settings. Lengths are in metres.
 
----
+| Parameter | Default | Meaning |
+| --- | --- | --- |
+| `drive_type` | `4wis` | Four-wheel independent steering and driving. Also accepts `diff_drive`, `mecanum`, `ackermann_front` and `ackermann_rear`. |
+| `robot_length`, `robot_width`, `robot_height` | 0.50, 0.40, 0.10 | Chassis length, width and thickness |
+| `wheel_radius`, `wheel_width` | 0.08, 0.05 | Wheel radius and tread width |
+| `wheel_separation_x`, `wheel_separation_y` | 0.50, 0.40 | Wheelbase and track width |
+| `arm_count` | 2 | Install zero, one or two arms. `use_arms:=false` disables both. |
+| `arm_mount_x` | `auto` | Fore–aft mount position relative to the chassis centre. A single arm defaults to halfway between the central LiDAR and the rear edge, subject to clearance. |
+| `arm_spacing` | `auto` | Centre-to-centre distance between dual arm mounts |
 
-## Project Structure
-```plaintext
-xmobot/
-├── README.md             # 项目首页描述
-├── urdf/
-│   ├── xmobot_base.xacro         # 基础机器人主体
-│   ├── xmobot_inertial.xacro     # 惯性矩阵计算
-│   ├── xmobot_sensors.xacro      # 激光雷达+相机模块
-│   ├── xmobot_drive.xacro        # 驱动方式参数（差速、阿克曼、全向）
-│   ├── xmobot_gazebo.xacro       # Gazebo仿真设置和Transmission接口
-│   ├── xmobot.urdf.xacro         # 主入口，组合调用以上模块
-├── config/
-│   ├── control_gazebo.yaml       # 控制器参数
-├── launch/
-│   ├── display_launch.py   # RViz展示
-│   ├── gazebo_launch.py    # Gazebo仿真
-├── meshes/                 # 模型网格文件
-│   ├── base.dae
-│   ├── wheel.dae
-│   ├── steering_link.dae
-│   ├── lidar.stl
-│   ├── camera.stl
-├── scripts/
-│   ├── model_test.py       # 测试脚本
-├── worlds/
-│   ├── simple_world.world  # Gazebo仿真环境
-├── LICENSE
-```
----
+Wheel centres follow the wheel radius to keep the tyres on the ground. LiDAR and arm bases follow the top deck as thickness changes. The front camera follows the centre of the front face as length changes.
 
 ## Contribution
 We welcome contributions!
@@ -166,5 +97,42 @@ CsuAmr: Four-Wheel Independent Steering and Driving mobile robot (The robot syst
 
 ---
 
+## Citation
+
+[Download both BibTeX entries](xmobot.bib), or copy the entry for the work you use.
+
+### Xmobot platform and robotics education
+
+[IEEE Xplore · IEEE Transactions on Learning Technologies](https://ieeexplore.ieee.org/document/11475163)
+
+```bibtex
+@article{wang2026xmobot,
+  author = {Wang, Yizhi and Wang, Minjuan and Xu, Degang and Lee, John Chi-Kin and Xie, Yongfang},
+  title = {{Xmobot}: Enabling Rapid Build-and-Train Robotics Education With Agentic AI},
+  journal = {IEEE Transactions on Learning Technologies},
+  volume = {19},
+  pages = {376--387},
+  year = {2026},
+  doi = {10.1109/TLT.2026.3681123},
+  url = {https://ieeexplore.ieee.org/document/11475163}
+}
+```
+
+### 4WISD kinematic controller
+
+[IEEE Xplore · China Automation Congress](https://ieeexplore.ieee.org/document/11487174)
+
+```bibtex
+@inproceedings{wang2025universal,
+  author = {Wang, Yizhi and Xu, Degang and Xie, Yongfang},
+  title = {Universal Multi-Mode Kinematic Controller for Four-Wheel Independent Steering and Driving Mobile Robots},
+  booktitle = {2025 China Automation Congress (CAC)},
+  year = {2025},
+  pages = {4491--4496},
+  doi = {10.1109/CAC67268.2025.11487174},
+  url = {https://ieeexplore.ieee.org/document/11487174}
+}
+```
+
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.

@@ -2,8 +2,8 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
     <!-- 引用模块 -->
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_drive.xacro"/>
-    <xacro:include filename="$(find xmobot)/urdf/xmobot_sensors.xacro"/>
+    <xacro:include filename="xmobot_drive.xacro"/>
+    <xacro:include filename="xmobot_sensors.xacro"/>
 
     <!-- Basement -->
     <link name="base_footprint"/>
@@ -11,7 +11,7 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="base_link"/>
-        <origin xyz="0 0 ${wheel_radius*2}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${body_center_z}" rpy="0 0 0"/>
     </joint>
 
     <link name="base_link">

@@ -1,14 +1,57 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
+    <xacro:macro name="controlled_joint" params="name command">
+        <joint name="${name}">
+            <command_interface name="${command}"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="controlled_arm" params="prefix">
+        <xacro:controlled_joint name="${prefix}joint_1" command="position"/>
+        <xacro:controlled_joint name="${prefix}joint_2" command="position"/>
+        <xacro:controlled_joint name="${prefix}joint_3" command="position"/>
+        <xacro:controlled_joint name="${prefix}joint_4" command="position"/>
+        <xacro:controlled_joint name="${prefix}joint_5" command="position"/>
+        <xacro:controlled_joint name="${prefix}joint_6" command="position"/>
+        <xacro:controlled_joint name="${prefix}finger_left_joint" command="position"/>
+        <xacro:controlled_joint name="${prefix}finger_right_joint" command="position"/>
+    </xacro:macro>
+
     <xacro:macro name="gazebo_base_plugins" params="drive_type">
 
-        <!-- Gazebo控制器插件 -->
+        <ros2_control name="Xmobot" type="system">
+            <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            </hardware>
+            <xacro:controlled_joint name="front_left_wheel_joint" command="velocity"/>
+            <xacro:controlled_joint name="front_right_wheel_joint" command="velocity"/>
+            <xacro:controlled_joint name="rear_left_wheel_joint" command="velocity"/>
+            <xacro:controlled_joint name="rear_right_wheel_joint" command="velocity"/>
+            <xacro:if value="${drive_type in ('4wis', 'ackermann_front')}">
+                <xacro:controlled_joint name="front_left_steering_joint" command="position"/>
+                <xacro:controlled_joint name="front_right_steering_joint" command="position"/>
+            </xacro:if>
+            <xacro:if value="${drive_type in ('4wis', 'ackermann_rear')}">
+                <xacro:controlled_joint name="rear_left_steering_joint" command="position"/>
+                <xacro:controlled_joint name="rear_right_steering_joint" command="position"/>
+            </xacro:if>
+            <xacro:if value="${installed_arms >= 1}">
+                <xacro:controlled_arm prefix="left_"/>
+            </xacro:if>
+            <xacro:if value="${installed_arms == 2}">
+                <xacro:controlled_arm prefix="right_"/>
+            </xacro:if>
+        </ros2_control>
+
         <gazebo>
             <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-                <robotNamespace>/</robotNamespace>
-                <robotParam>robot_description</robotParam>
-                <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+                <xacro:property name="config_path" value="$(arg control_config)"/>
+                <xacro:if value="${config_path != ''}">
+                    <parameters>${config_path}</parameters>
+                </xacro:if>
             </plugin>
         </gazebo>
 
@@ -200,7 +243,7 @@
                         <!-- <namespace>/xmobot</namespace> -->
                         <remapping>~/out:=imu</remapping>
                     </ros>
-                    <initial_orientation_as_reference>false</initial_orientation_as_reference>>
+                    <initial_orientation_as_reference>false</initial_orientation_as_reference>
                 </plugin>
             </sensor>
         </gazebo>
